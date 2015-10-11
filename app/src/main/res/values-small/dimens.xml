@@ -2,6 +2,6 @@
 <resources>
 
     <dimen name="navigation_drawer_width">240dp</dimen>
-    <dimen name="navigation_list_height">125dp</dimen>
-
+    <dimen name="navigation_list_height">100dp</dimen>
+    <dimen name="nav_header_height">135dp</dimen>
 </resources>

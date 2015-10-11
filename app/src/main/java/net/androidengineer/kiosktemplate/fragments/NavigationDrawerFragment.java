@@ -9,14 +9,15 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import net.androidengineer.kiosktemplate.R;
 import net.androidengineer.kiosktemplate.navigation.JuiceNavAdapter;
@@ -70,6 +71,9 @@ public class NavigationDrawerFragment extends Fragment {
 
     String _mNavFragType;
     String _mNavFragBrand;
+    ;
+    private ViewFlipper mViewFlipper;
+
 
     public NavigationDrawerFragment() {
     }
@@ -99,6 +103,11 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         assert v != null;
+
+        mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
+        mViewFlipper.setAutoStart(true);
+        mViewFlipper.setFlipInterval(3500);
+        mViewFlipper.startFlipping();
 
         setupArtesianCategoryList();
         mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);

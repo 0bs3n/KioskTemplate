@@ -24,5 +24,7 @@
     <string name="text_small">Small Text</string>
 
     <string name="content_main_logo">Main Logo</string>
+    <string name="nav_list1_heading">Category 1</string>
+    <string name="nav_list2_heading">Category 2</string>
 
 </resources>
