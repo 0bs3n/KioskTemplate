@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/fragment_topper"
+    tools:context="com.thevapequeen.kiosktemplate.fragments.TopperFragment">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewMain"
+        android:contentDescription="@string/content_main_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textViewMain"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageViewMain"/>
+
+</RelativeLayout>

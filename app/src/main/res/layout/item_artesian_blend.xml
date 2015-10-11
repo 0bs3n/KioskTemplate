@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    >
+
+    <TextView
+        android:id="@+id/textViewHouseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Name"/>
+
+    <TextView
+        android:id="@+id/textViewHouseDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewHouseName"
+        android:layout_centerHorizontal="true"
+        android:text="Juice"/>
+
+    <TextView
+        android:id="@+id/textViewHouseVG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/textViewSplit"
+        android:text="VG"/>
+
+    <TextView
+        android:id="@+id/textViewSplit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/textViewHousePG"
+        android:text="@string/vgpgsplitview"/>
+
+    <TextView
+        android:id="@+id/textViewHousePG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="PG"/>
+
+    <TextView
+        android:id="@+id/textViewHouseNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Num"/>
+
+</RelativeLayout>

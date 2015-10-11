@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="navigation_drawer_width">280dp</dimen>
+    <dimen name="navigation_list_height">200dp</dimen>
+
+</resources>
