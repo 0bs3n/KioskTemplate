@@ -1,6 +1,5 @@
 package net.androidengineer.kiosktemplate.fragments;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -40,6 +39,7 @@ public class TopperFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListenerFragmentTopper = (OnFragmentInteractionListener) getActivity();
 
     }
 
@@ -58,24 +58,13 @@ public class TopperFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListenerFragmentTopper = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListenerFragmentTopper = null;
     }
 
     public interface OnFragmentInteractionListener {
-        public void onFragmentTopperInteraction(String textTopper);
+        void onFragmentTopperInteraction(String textTopper);
     }
 
     private void setInitialLogo(){
@@ -94,8 +83,6 @@ public class TopperFragment extends Fragment {
     public void setText(String juiceBrand){
         textViewTopper.setText(juiceBrand);
     }
-
-
 
 
 }

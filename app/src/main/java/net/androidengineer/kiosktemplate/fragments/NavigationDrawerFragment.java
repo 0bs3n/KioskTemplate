@@ -1,8 +1,8 @@
 package net.androidengineer.kiosktemplate.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -24,7 +25,6 @@ import net.androidengineer.kiosktemplate.navigation.JuiceNavAdapter;
 import net.androidengineer.kiosktemplate.navigation.JuiceNavItem;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,27 +55,32 @@ public class NavigationDrawerFragment extends Fragment {
      * A pointer to the current callbacks instance (the Activity).
      */
     NavigationDrawerCallbacks mCallbacks;
-    private ActionBarDrawerToggle mDrawerToggle;
     DrawerLayout mDrawerLayout;
     View mFragmentContainerView;
-
     int mCurrentSelectedPosition = 0;
     boolean mFromSavedInstanceState;
     boolean mUserLearnedDrawer;
-
     ListView mDrawerArtesianListView;
     ListView mDrawerPremiumListView;
-
     List<JuiceNavItem> artesianNavJuice = new ArrayList<>();
     List<JuiceNavItem> premiumNavJuice = new ArrayList<>();
-
     String _mNavFragType;
     String _mNavFragBrand;
-    ;
-    private ViewFlipper mViewFlipper;
-
+    private ActionBarDrawerToggle mDrawerToggle;
 
     public NavigationDrawerFragment() {
+    }
+
+    public static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(preferenceName, preferenceValue);
+        editor.apply();
+    }
+
+    public static String readFromPreferences(Context context, String preferenceName, String preferenceValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(preferenceName, preferenceValue);
     }
 
     @Override
@@ -85,9 +90,11 @@ public class NavigationDrawerFragment extends Fragment {
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
+            mCallbacks = (NavigationDrawerCallbacks) getActivity();
         }
     }
 
@@ -104,37 +111,74 @@ public class NavigationDrawerFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         assert v != null;
 
-        mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
-        mViewFlipper.setAutoStart(true);
-        mViewFlipper.setFlipInterval(3500);
-        mViewFlipper.startFlipping();
-
+        setViewFlipper(v);
         setupArtesianCategoryList();
-        mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);
-        mDrawerArtesianListView.setAdapter(new JuiceNavAdapter(artesianNavJuice, inflater));
-        mDrawerArtesianListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                _mNavFragType = "Artesian";
-                _mNavFragBrand = ((TextView)view.findViewById(R.id.textViewNavItem)).getText().toString();
-                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
-                mDrawerLayout.closeDrawer(mFragmentContainerView);
-            }
-        });
-
+        setArtesianAdapter(inflater, v);
         setupPremiumBrandList();
+        setPremiumAdapter(inflater, v);
+
+        return v;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+    }
+
+    private void setPremiumAdapter(LayoutInflater inflater, View v) {
         mDrawerPremiumListView = (ListView) v.findViewById(R.id.listviewPremiumBrands);
         mDrawerPremiumListView.setAdapter(new JuiceNavAdapter(premiumNavJuice, inflater));
         mDrawerPremiumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 _mNavFragType = "Premium";
-                _mNavFragBrand = ((TextView)view.findViewById(R.id.textViewNavItem)).getText().toString();
-                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType,_mNavFragBrand);
+                _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
+                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
                 mDrawerLayout.closeDrawer(mFragmentContainerView);
             }
         });
-        return v;
+    }
+
+    private void setArtesianAdapter(LayoutInflater inflater, View v) {
+        mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);
+        mDrawerArtesianListView.setAdapter(new JuiceNavAdapter(artesianNavJuice, inflater));
+        mDrawerArtesianListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                _mNavFragType = "Artesian";
+                _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
+                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
+                mDrawerLayout.closeDrawer(mFragmentContainerView);
+            }
+        });
+    }
+
+    private void setViewFlipper(View v) {
+        ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
+
+        ArrayList<String> arrayListImageNames = getBitmapList();
+        for (int i = 0; i < arrayListImageNames.size(); i++) {
+            Bitmap mBitmap = getBitmap(arrayListImageNames.get(i));
+            ImageView imageView = new ImageView(getActivity());
+            imageView.setImageBitmap(mBitmap);
+            mViewFlipper.addView(imageView);
+            mBitmap.recycle();
+            mBitmap = null;
+
+        }
+        System.gc();
+        Runtime.getRuntime().gc();
+
+        mViewFlipper.setAutoStart(true);
+        mViewFlipper.setFlipInterval(3500);
+        mViewFlipper.startFlipping();
     }
 
     public boolean isDrawerOpen() {
@@ -156,9 +200,10 @@ public class NavigationDrawerFragment extends Fragment {
                 super.onDrawerOpened(drawerView);
                 if (!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
-                    saveToPreferences(getActivity(), KEY_USER_LEARNED_DRAWER, String.valueOf(mUserLearnedDrawer));
+                    saveToPreferences(getActivity(), KEY_USER_LEARNED_DRAWER, String.valueOf(true));
                 }
             }
+
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -184,39 +229,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
-    }
-
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
-    public interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(String type, String brand);
-    }
-
-    private void setupArtesianCategoryList(){
+    private void setupArtesianCategoryList() {
         artesianNavJuice.clear();
         String csvFile = getString(R.string.artesian_categories_file);
         BufferedReader br = null;
@@ -227,11 +240,9 @@ public class NavigationDrawerFragment extends Fragment {
             while ((line = br.readLine()) != null) {
                 // use comma as separator
                 String[] _artesianjuice = line.split(cvsSplitBy);
-                artesianNavJuice.add(new JuiceNavItem(BitmapFactory.decodeResource(getResources(),R.drawable.logo_thumbnail),_artesianjuice[0]));
+                artesianNavJuice.add(new JuiceNavItem(BitmapFactory.decodeResource(getResources(), R.drawable.logo_thumbnail), _artesianjuice[0]));
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -245,7 +256,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
-    private void setupPremiumBrandList(){
+    private void setupPremiumBrandList() {
         premiumNavJuice.clear();
         String csvFile = getString(R.string.premium_brands_file);
         BufferedReader br = null;
@@ -255,10 +266,8 @@ public class NavigationDrawerFragment extends Fragment {
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 String[] _premiumjuice = line.split(cvsSplitBy);
-                premiumNavJuice.add(new JuiceNavItem(BitmapFactory.decodeResource(getResources(),R.drawable.premium_thumbnail),_premiumjuice[0]));
+                premiumNavJuice.add(new JuiceNavItem(BitmapFactory.decodeResource(getResources(), R.drawable.premium_thumbnail), _premiumjuice[0]));
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -272,16 +281,53 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
-    public static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(preferenceName, preferenceValue);
-        editor.apply();
+    private Bitmap getBitmap(String filename) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 32;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(getString(R.string.download_directory_path) + filename, options);
+        Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
+
+        bitmap.recycle();
+        bitmap = null;
+        System.gc();
+        Runtime.getRuntime().gc();
+
+        return scaledBitmap;
     }
 
-    public static String readFromPreferences(Context context, String preferenceName, String preferenceValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(preferenceName, preferenceValue);
+    private ArrayList<String> getBitmapList() {
+        ArrayList<String> arrayListBitmap = new ArrayList<String>();
+        String csvFile = getString(R.string.bitmap_list_path);
+        BufferedReader br = null;
+        String line = "";
+        try {
+            br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+                arrayListBitmap.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return arrayListBitmap;
+    }
+
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
+    public interface NavigationDrawerCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onNavigationDrawerItemSelected(String type, String brand);
     }
 
 }
