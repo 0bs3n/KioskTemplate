@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import net.androidengineer.kiosktemplate.R;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 public class TopperFragment extends Fragment {
 
@@ -77,7 +81,26 @@ public class TopperFragment extends Fragment {
     }
 
     private void setInitialText(){
-        textViewTopper.setText(getString(R.string.app_name));
+        String csvFile = getString(R.string.information_file);
+        BufferedReader br = null;
+        String line = "";
+        try {
+            br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        textViewTopper.setText(line);
     }
 
     public void setText(String juiceBrand){

@@ -297,7 +297,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private ArrayList<String> getBitmapList() {
-        ArrayList<String> arrayListBitmap = new ArrayList<String>();
+        ArrayList<String> arrayListBitmap = new ArrayList<>();
         String csvFile = getString(R.string.bitmap_list_path);
         BufferedReader br = null;
         String line = "";

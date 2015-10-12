@@ -1,27 +1,25 @@
 <resources>
-    <string name="app_name">Kiosk Template</string>
+    <string name="app_name">Menu</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
     <string name="vgpgsplitview">-</string>
 
-    <!-- About Us Content -->
-    <string name="content_Main">"Our handcrafted Artisan liquids are made with organic &amp; Kosher USP grade Vegetable Glycerin, Kosher USP grade Propylene Glycol, organic &amp; US made flavor extracts, and a pharmaceutical grade nicotine (optional). Navigate through this menu to find out more about all of our delicately thought out flavors and their ratios. Want an extra flavor shot? Want to combine some of our flavors for your own custom liquid? We can create anything for your individual preferences, feel free to ask!"</string>
-
     <!-- Content Descriptions -->
-    <string name="description_imageView">Juice Logo</string>
+    <string name="description_imageView">Brand Logo</string>
 
     <!-- Files -->
     <string name="artesian_categories_file">"/sdcard/Download/artesian_categories.csv"</string>
     <string name="artesian_juice_file">"/sdcard/Download/artesian_juices.csv"</string>
     <string name="premium_brands_file">"/sdcard/Download/premium_brands.csv"</string>
     <string name="premium_juice_file">"/sdcard/Download/premium_juices.csv"</string>
-    <string name="bitmap_list_path">"/sdcard/Download/navigation_header_images"</string>
+    <string name="bitmap_list_path">"/sdcard/Download/navigation_header_images.csv"</string>
+    <string name="information_file">"/sdcard/Download/information_content.csv"</string>
 
     <string name="content_main_logo">Main Logo</string>
-    <string name="nav_list1_heading">Category 1</string>
-    <string name="nav_list2_heading">Category 2</string>
+    <string name="nav_list1_heading">House Categories</string>
+    <string name="nav_list2_heading">Premium Brands</string>
     <string name="download_directory_path">/sdcard/Download/</string>
 
 </resources>

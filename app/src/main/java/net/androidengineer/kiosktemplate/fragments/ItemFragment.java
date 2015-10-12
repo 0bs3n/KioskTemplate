@@ -1,6 +1,5 @@
 package net.androidengineer.kiosktemplate.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -26,13 +25,6 @@ public class ItemFragment extends ListFragment {
 
     OnFragmentInteractionListener mListener;
 
-    public ItemFragment newInstance(String mJuiceType) {
-        ItemFragment fragment = new ItemFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public ItemFragment() {
         // Required empty public constructor
     }
@@ -40,6 +32,7 @@ public class ItemFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mListener = (OnFragmentInteractionListener) getActivity();
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_item, null, false);
@@ -52,17 +45,6 @@ public class ItemFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -70,7 +52,7 @@ public class ItemFragment extends ListFragment {
 
     public interface OnFragmentInteractionListener {
 
-        public void onFragmentItemInteraction(String string);
+        void onFragmentItemInteraction(String string);
 
     }
 
