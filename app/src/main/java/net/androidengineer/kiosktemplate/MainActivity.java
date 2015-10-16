@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,6 @@ import net.androidengineer.kiosktemplate.fragments.TopperFragment;
 import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     NavigationDrawerFragment mNavigationDrawerFragment;
     TopperFragment mTopperFragment;
     ItemFragment mItemFragment;
+    Handler handler;
+    Runnable runnable;
 
     private ArrayList<ArtesianBlend> artesianBlendArrayList = new ArrayList<>();
     private ArrayList<PremiumJuice> premiumJuiceArrayList = new ArrayList<>();
@@ -53,6 +55,16 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+
+        handler = new Handler();
+        runnable = new Runnable() {
+
+            @Override
+            public void run() {
+
+            }
+        };
+        startHandler();
 
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
 
@@ -69,6 +81,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
         mItemFragment = (ItemFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_item);
 
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        stopHandler();//stop first and then start
+        startHandler();
     }
 
     @Override
@@ -155,8 +174,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     artesianBlendArrayList.add(new ArtesianBlend(_artesianblend[0], _artesianblend[1], _artesianblend[2], _artesianblend[3], _artesianblend[4], _artesianblend[5]));
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -184,8 +201,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     premiumJuiceArrayList.add(new PremiumJuice(_premiumjuice[0], _premiumjuice[1], _premiumjuice[2], _premiumjuice[3], _premiumjuice[4], _premiumjuice[5]));
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -225,6 +240,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    public void stopHandler() {
+        handler.removeCallbacks(runnable);
+    }
+
+    public void startHandler() {
+        handler.postDelayed(runnable, 60000);
     }
 
 
