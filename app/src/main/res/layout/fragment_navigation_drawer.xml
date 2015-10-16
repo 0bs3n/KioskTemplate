@@ -2,33 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/primaryColor">
+    android:background="@color/primaryColor"
+    android:orientation="vertical">
 
-    <include android:id="@+id/nav_header"
-                layout="@layout/nav_header"/>
+    <include
+        android:id="@+id/nav_header"
+        layout="@layout/nav_header" />
+
     <TextView
         android:id="@+id/textViewArtesianCategories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav_list1_heading"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/abc_text_size_headline_material"
         android:textStyle="italic" />
+
     <ListView
         android:id="@+id/listviewArtesianCategories"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_list_height"/>
+        android:layout_height="@dimen/navigation_list_height" />
+
     <TextView
         android:id="@+id/textViewPremiumBrands"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav_list2_heading"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/abc_text_size_headline_material"
         android:textStyle="italic" />
+
     <ListView
         android:id="@+id/listviewPremiumBrands"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_list_height"/>
+        android:layout_height="@dimen/navigation_list_height" />
 
 
 </LinearLayout>

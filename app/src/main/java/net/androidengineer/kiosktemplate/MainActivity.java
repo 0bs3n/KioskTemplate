@@ -3,6 +3,7 @@ package net.androidengineer.kiosktemplate;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import net.androidengineer.kiosktemplate.artesianblends.ArtesianBlend;
 import net.androidengineer.kiosktemplate.fragments.ItemFragment;
@@ -30,7 +33,7 @@ import java.util.List;
  * Created by James Campbell for exclusive use by The Vape Queen. All rights reserved.
  */
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-         TopperFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener {
+        TopperFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener {
 
     private final List blockedKeys = new ArrayList(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_HOME));
 
@@ -51,13 +54,20 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         setSupportActionBar(toolbar);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
-        mTopperFragment = (TopperFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_topper);
+        mTopperFragment = (TopperFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_topper);
+        TopperFragment.imageViewTopper.setAnimation(animation);
+        TopperFragment.textViewTopper.setAnimation(animation);
 
-        mItemFragment = (ItemFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_item);
+        TopperFragment.imageViewTopper.startAnimation(animation);
+        TopperFragment.textViewTopper.startAnimation(animation);
+
+        mItemFragment = (ItemFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_item);
 
     }
 
@@ -88,42 +98,50 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     @Override
     public void onNavigationDrawerItemSelected(String juiceType, String juiceBrand) {
-        if(juiceType.equals("Artesian")){
+        if (juiceType.equals("Artesian")) {
             setItemFragmentArtesianList(juiceType, juiceBrand);
-        }
-        else if(juiceType.equals("Premium")){
+        } else if (juiceType.equals("Premium")) {
             setItemFragmentPremiumList(juiceType, juiceBrand);
-        }
-        else{
+        } else {
             //Nothing To See Here. Move Along.
         }
     }
 
     @Override
-    public void onFragmentTopperInteraction(String textTopper){
+    public void onFragmentTopperInteraction(String textTopper) {
 
     }
 
     @Override
-    public void onFragmentItemInteraction(String string){
+    public void onFragmentItemInteraction(String string) {
 
     }
 
     private void setupKioskState() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+
         Settings.System.putInt(getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
         Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 255);
     }
 
-    private void setupArtesianBrandList(String brand){
+    private void setupArtesianBrandList(String brand) {
         artesianBlendArrayList.clear();
         String csvFile = "/sdcard/Download/artesian_juices.csv";
         BufferedReader br = null;
@@ -133,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 String[] _artesianblend = line.split(cvsSplitBy);
-                if(_artesianblend[5].equals(brand)){
+                if (_artesianblend[5].equals(brand)) {
                     artesianBlendArrayList.add(new ArtesianBlend(_artesianblend[0], _artesianblend[1], _artesianblend[2], _artesianblend[3], _artesianblend[4], _artesianblend[5]));
                 }
             }
@@ -152,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
     }
 
-    private void setupPremiumBrandList(String brand){
+    private void setupPremiumBrandList(String brand) {
         premiumJuiceArrayList.clear();
         String csvFile = "/sdcard/Download/premium_juices.csv";
         BufferedReader br = null;
@@ -162,8 +180,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 String[] _premiumjuice = line.split(cvsSplitBy);
-                if(_premiumjuice[5].equals(brand)){
-                    premiumJuiceArrayList.add(new PremiumJuice(_premiumjuice[0],_premiumjuice[1],_premiumjuice[2],_premiumjuice[3],_premiumjuice[4],_premiumjuice[5]));
+                if (_premiumjuice[5].equals(brand)) {
+                    premiumJuiceArrayList.add(new PremiumJuice(_premiumjuice[0], _premiumjuice[1], _premiumjuice[2], _premiumjuice[3], _premiumjuice[4], _premiumjuice[5]));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -181,18 +199,18 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
     }
 
-    private void setItemFragmentArtesianList(String juiceType, String juiceBrand){
+    private void setItemFragmentArtesianList(String juiceType, String juiceBrand) {
         mTopperFragment.setText(juiceBrand);
         Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/logo.png");
         mTopperFragment.setImageViewTopper(bitmap);
         //Pass to List Fragment
         setupArtesianBrandList(juiceBrand);
-        mItemFragment.setupArtesianList(juiceType,artesianBlendArrayList);
+        mItemFragment.setupArtesianList(juiceType, artesianBlendArrayList);
     }
 
-    private void setItemFragmentPremiumList(String juiceType,String juiceBrand){
+    private void setItemFragmentPremiumList(String juiceType, String juiceBrand) {
         mTopperFragment.setText(juiceBrand);
-        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/" + juiceBrand.toLowerCase().replaceAll(" ","") + ".bmp");
+        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/" + juiceBrand.toLowerCase().replaceAll(" ", "") + ".bmp");
         mTopperFragment.setImageViewTopper(bitmap);
         //Pass to List Fragment
         setupPremiumBrandList(juiceBrand);

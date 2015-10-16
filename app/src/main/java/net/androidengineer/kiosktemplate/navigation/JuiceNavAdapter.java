@@ -2,6 +2,7 @@ package net.androidengineer.kiosktemplate.navigation;
 /**
  * Created by James Campbell for exclusive use by The Vape Queen. All rights reserved.
  */
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ public class JuiceNavAdapter extends BaseAdapter {
     private List<JuiceNavItem> juiceNavItems;
     private LayoutInflater vi;
 
-    public JuiceNavAdapter(List<JuiceNavItem> juiceNavItems,LayoutInflater inflater) {
+    public JuiceNavAdapter(List<JuiceNavItem> juiceNavItems, LayoutInflater inflater) {
         this.juiceNavItems = juiceNavItems;
         vi = inflater;
     }

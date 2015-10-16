@@ -18,12 +18,11 @@ import java.util.List;
 
 public class ItemFragment extends ListFragment {
     String mJuiceType;
-    private List<ArtesianBlend> mArtesianItemList;
-    private ArrayList<PremiumJuice> mPremiumItemList;
     ArtesianAdapter artesianAdapter;
     PremiumAdapter premiumAdapter;
-
     OnFragmentInteractionListener mListener;
+    private List<ArtesianBlend> mArtesianItemList;
+    private ArrayList<PremiumJuice> mPremiumItemList;
 
     public ItemFragment() {
         // Required empty public constructor
@@ -39,7 +38,7 @@ public class ItemFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
     }
@@ -50,25 +49,25 @@ public class ItemFragment extends ListFragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-
-        void onFragmentItemInteraction(String string);
-
-    }
-
-    public void setupArtesianList(String artesian, List<ArtesianBlend> artesianBlends){
+    public void setupArtesianList(String artesian, List<ArtesianBlend> artesianBlends) {
         mJuiceType = artesian;
         mArtesianItemList = artesianBlends;
-        artesianAdapter = new ArtesianAdapter(getActivity(),mArtesianItemList);
+        artesianAdapter = new ArtesianAdapter(getActivity(), mArtesianItemList);
         setListAdapter(artesianAdapter);
 
     }
 
-    public void setupPremiumList(String premium, ArrayList<PremiumJuice> premiumJuices){
+    public void setupPremiumList(String premium, ArrayList<PremiumJuice> premiumJuices) {
         mJuiceType = premium;
         mPremiumItemList = premiumJuices;
-        premiumAdapter = new PremiumAdapter(getActivity(),mPremiumItemList);
+        premiumAdapter = new PremiumAdapter(getActivity(), mPremiumItemList);
         setListAdapter(premiumAdapter);
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        void onFragmentItemInteraction(String string);
+
     }
 
 }

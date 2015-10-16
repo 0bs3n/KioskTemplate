@@ -6,7 +6,8 @@
     android:background="@color/primaryColorLight"
     android:clickable="true">
 
-    <ViewFlipper android:id="@+id/nav_header_flipper"
+    <ViewFlipper
+        android:id="@+id/nav_header_flipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

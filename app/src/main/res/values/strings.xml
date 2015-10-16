@@ -15,7 +15,7 @@
     <string name="premium_brands_file">"/sdcard/Download/premium_brands.csv"</string>
     <string name="premium_juice_file">"/sdcard/Download/premium_juices.csv"</string>
     <string name="bitmap_list_path">"/sdcard/Download/navigation_header_images.csv"</string>
-    <string name="information_file">"/sdcard/Download/information_content.csv"</string>
+    <string name="information_file">"/sdcard/Download/information_content.txt"</string>
 
     <string name="content_main_logo">Main Logo</string>
     <string name="nav_list1_heading">House Categories</string>

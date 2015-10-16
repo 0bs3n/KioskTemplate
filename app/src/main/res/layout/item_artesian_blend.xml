@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
-    >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <TextView
         android:id="@+id/textViewHouseName"
@@ -9,7 +9,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Name"/>
+        android:textSize="@dimen/abc_text_size_display_1_material"
+        android:textColor="@color/primaryTextColor"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="40dp" />
 
     <TextView
         android:id="@+id/textViewHouseDescription"
@@ -17,7 +21,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewHouseName"
         android:layout_centerHorizontal="true"
-        android:text="Juice"/>
+        android:textSize="@dimen/abc_text_size_headline_material"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="40dp" />
 
     <TextView
         android:id="@+id/textViewHouseVG"
@@ -25,7 +33,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/textViewSplit"
-        android:text="VG"/>
+        android:text="VG"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/abc_text_size_medium_material" />
 
     <TextView
         android:id="@+id/textViewSplit"
@@ -33,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/textViewHousePG"
-        android:text="@string/vgpgsplitview"/>
+        android:text="@string/vgpgsplitview" />
 
     <TextView
         android:id="@+id/textViewHousePG"
@@ -41,13 +51,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="PG"/>
+        android:text="PG"
+        android:textSize="@dimen/abc_text_size_medium_material" />
 
     <TextView
         android:id="@+id/textViewHouseNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="Num"/>
+        android:text="Num"
+        android:textColor="@color/accentColor"
+        android:textSize="@dimen/abc_text_size_display_1_material" />
 
 </RelativeLayout>

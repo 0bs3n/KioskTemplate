@@ -3,7 +3,6 @@ package net.androidengineer.kiosktemplate.fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,27 +13,15 @@ import android.widget.TextView;
 import net.androidengineer.kiosktemplate.R;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 
 
 public class TopperFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListenerFragmentTopper;
     public static ImageView imageViewTopper;
     public static TextView textViewTopper;
-    public Bitmap mBitmap;
-    final Handler handler = new Handler();
-
-    private String juiceType;
-    private String juiceBrand;
-
-    public TopperFragment newInstance(String juiceType, String juiceBrand) {
-        TopperFragment fragment = new TopperFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private OnFragmentInteractionListener mListenerFragmentTopper;
 
     public TopperFragment() {
         // Required empty public constructor
@@ -52,11 +39,14 @@ public class TopperFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_topper, container, false);
 
-        imageViewTopper = (ImageView)view.findViewById(R.id.imageViewMain);
+
+        imageViewTopper = (ImageView) view.findViewById(R.id.imageViewMain);
         setInitialLogo();
 
-        textViewTopper = (TextView)view.findViewById(R.id.textViewMain);
+
+        textViewTopper = (TextView) view.findViewById(R.id.textViewMain);
         setInitialText();
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -67,44 +57,58 @@ public class TopperFragment extends Fragment {
         mListenerFragmentTopper = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentTopperInteraction(String textTopper);
-    }
-
-    private void setInitialLogo(){
+    private void setInitialLogo() {
         Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/logo.png");
         imageViewTopper.setImageBitmap(bitmap);
     }
 
-    public void setImageViewTopper(Bitmap bitmap){
+    public void setImageViewTopper(Bitmap bitmap) {
         imageViewTopper.setImageBitmap(bitmap);
     }
 
-    private void setInitialText(){
-        String csvFile = getString(R.string.information_file);
-        BufferedReader br = null;
-        String line = "";
-        try {
-            br = new BufferedReader(new FileReader(csvFile));
-            while ((line = br.readLine()) != null) {
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        textViewTopper.setText(line);
+    private void setInitialText() {
+        textViewTopper.setText(readTextFile(getString(R.string.information_file)));
     }
 
-    public void setText(String juiceBrand){
+    /*
+     * Read a text file.
+     */
+    public String readTextFile(String actualFile) {
+
+        String contents = String.valueOf("");
+
+        try {
+
+            // Get the text file
+            File file = new File(actualFile);
+
+            // check if file is not empty
+            if (file.exists() && file.length() != 0) {
+
+                // read the file to get contents
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    // store the text file line to contents variable
+                    contents += (line + "\n");
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return contents;
+    }
+
+    public void setText(String juiceBrand) {
         textViewTopper.setText(juiceBrand);
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentTopperInteraction(String textTopper);
     }
 
 

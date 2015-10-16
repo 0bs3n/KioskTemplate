@@ -18,13 +18,17 @@ public class JuiceNavItem {
         return this.name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public Bitmap getBitmap(){return this.bitmap;}
+    public Bitmap getBitmap() {
+        return this.bitmap;
+    }
 
-    public void setBitmap(Bitmap bitmap){this.bitmap = bitmap;}
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
 
 
 }

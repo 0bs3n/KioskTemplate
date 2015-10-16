@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <ImageView
+        android:id="@+id/imageViewNavItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageViewNavItem"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
+        android:layout_margin="15dp"
         android:src="@drawable/logo_thumbnail"
-        android:layout_margin="15dp" />
+        android:layout_gravity="center_vertical" />
 
     <TextView
+        android:id="@+id/textViewNavItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textViewNavItem"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/imageViewNavItem" />
+        android:textColor="@color/secondaryTextColor"
+        android:text="TEST"
+        android:textSize="@dimen/abc_text_size_large_material"
+        android:layout_gravity="center_vertical" />
 
-
-</RelativeLayout>
+</LinearLayout>

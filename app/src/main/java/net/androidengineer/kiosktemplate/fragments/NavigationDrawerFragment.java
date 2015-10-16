@@ -94,7 +94,7 @@ public class NavigationDrawerFragment extends Fragment {
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
-            mCallbacks = (NavigationDrawerCallbacks) getActivity();
+
         }
     }
 
@@ -111,12 +111,35 @@ public class NavigationDrawerFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         assert v != null;
 
-        setViewFlipper(v);
-        setupArtesianCategoryList();
-        setArtesianAdapter(inflater, v);
-        setupPremiumBrandList();
-        setPremiumAdapter(inflater, v);
+        mCallbacks = (NavigationDrawerCallbacks) getActivity();
 
+        setupArtesianCategoryList();
+        mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);
+        mDrawerArtesianListView.setAdapter(new JuiceNavAdapter(artesianNavJuice, inflater));
+        mDrawerArtesianListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                _mNavFragType = "Artesian";
+                _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
+                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
+                mDrawerLayout.closeDrawer(mFragmentContainerView);
+            }
+        });
+
+        setupPremiumBrandList();
+        mDrawerPremiumListView = (ListView) v.findViewById(R.id.listviewPremiumBrands);
+        mDrawerPremiumListView.setAdapter(new JuiceNavAdapter(premiumNavJuice, inflater));
+        mDrawerPremiumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                _mNavFragType = "Premium";
+                _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
+                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
+                mDrawerLayout.closeDrawer(mFragmentContainerView);
+            }
+        });
+
+        setViewFlipper(v);
         return v;
     }
 
@@ -132,34 +155,6 @@ public class NavigationDrawerFragment extends Fragment {
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
-    private void setPremiumAdapter(LayoutInflater inflater, View v) {
-        mDrawerPremiumListView = (ListView) v.findViewById(R.id.listviewPremiumBrands);
-        mDrawerPremiumListView.setAdapter(new JuiceNavAdapter(premiumNavJuice, inflater));
-        mDrawerPremiumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                _mNavFragType = "Premium";
-                _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
-                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
-                mDrawerLayout.closeDrawer(mFragmentContainerView);
-            }
-        });
-    }
-
-    private void setArtesianAdapter(LayoutInflater inflater, View v) {
-        mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);
-        mDrawerArtesianListView.setAdapter(new JuiceNavAdapter(artesianNavJuice, inflater));
-        mDrawerArtesianListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                _mNavFragType = "Artesian";
-                _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
-                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
-                mDrawerLayout.closeDrawer(mFragmentContainerView);
-            }
-        });
-    }
-
     private void setViewFlipper(View v) {
         ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
 
@@ -169,9 +164,6 @@ public class NavigationDrawerFragment extends Fragment {
             ImageView imageView = new ImageView(getActivity());
             imageView.setImageBitmap(mBitmap);
             mViewFlipper.addView(imageView);
-            mBitmap.recycle();
-            mBitmap = null;
-
         }
         System.gc();
         Runtime.getRuntime().gc();
@@ -283,13 +275,11 @@ public class NavigationDrawerFragment extends Fragment {
 
     private Bitmap getBitmap(String filename) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 32;
+        options.inSampleSize = 4;
 
         Bitmap bitmap = BitmapFactory.decodeFile(getString(R.string.download_directory_path) + filename, options);
         Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
 
-        bitmap.recycle();
-        bitmap = null;
         System.gc();
         Runtime.getRuntime().gc();
 

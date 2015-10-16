@@ -12,8 +12,8 @@ public class PremiumJuice {
     String pjDescription;
     String pjManufacturer;
 
-    public PremiumJuice(String pjimagefilepath,  String pjname, String pjvg, String pjpg,
-                        String pjscript,String pjmanufacturer) {
+    public PremiumJuice(String pjimagefilepath, String pjname, String pjvg, String pjpg,
+                        String pjscript, String pjmanufacturer) {
         this.pjImageFilePath = pjimagefilepath;
         this.pjName = pjname;
         this.pjVGratio = pjvg;
@@ -63,11 +63,11 @@ public class PremiumJuice {
         this.pjDescription = description;
     }
 
-    public String getPjManufacturer(){
+    public String getPjManufacturer() {
         return pjManufacturer;
     }
 
-    public void setPjManufacturer(String manufacturer){
+    public void setPjManufacturer(String manufacturer) {
         this.pjManufacturer = manufacturer;
     }
 
