@@ -61,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
             @Override
             public void run() {
+                NavigationDrawerFragment.mDrawerLayout.closeDrawers();
+                mTopperFragment.setInitialText();
+                mTopperFragment.setInitialLogo();
+                ItemFragment.relativeLayout.setVisibility(View.INVISIBLE);
 
             }
         };

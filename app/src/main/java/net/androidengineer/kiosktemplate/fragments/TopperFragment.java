@@ -57,7 +57,7 @@ public class TopperFragment extends Fragment {
         mListenerFragmentTopper = null;
     }
 
-    private void setInitialLogo() {
+    public void setInitialLogo() {
         Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/logo.png");
         imageViewTopper.setImageBitmap(bitmap);
     }
@@ -66,7 +66,7 @@ public class TopperFragment extends Fragment {
         imageViewTopper.setImageBitmap(bitmap);
     }
 
-    private void setInitialText() {
+    public void setInitialText() {
         textViewTopper.setText(readTextFile(getString(R.string.information_file)));
     }
 

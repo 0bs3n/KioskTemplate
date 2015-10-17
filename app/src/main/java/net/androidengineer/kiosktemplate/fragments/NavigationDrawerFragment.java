@@ -55,7 +55,7 @@ public class NavigationDrawerFragment extends Fragment {
      * A pointer to the current callbacks instance (the Activity).
      */
     NavigationDrawerCallbacks mCallbacks;
-    DrawerLayout mDrawerLayout;
+    public static DrawerLayout mDrawerLayout;
     View mFragmentContainerView;
     int mCurrentSelectedPosition = 0;
     boolean mFromSavedInstanceState;
