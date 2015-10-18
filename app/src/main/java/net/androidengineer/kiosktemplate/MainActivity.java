@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +24,7 @@ import net.androidengineer.kiosktemplate.fragments.TopperFragment;
 import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         TopperFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener {
 
     private final List blockedKeys = new ArrayList(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_HOME));
-
+    private final String TAG = "KioskMenu";
     NavigationDrawerFragment mNavigationDrawerFragment;
     TopperFragment mTopperFragment;
     ItemFragment mItemFragment;
@@ -52,25 +54,24 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         setupKioskState();
         setContentView(R.layout.activity_main);
 
+        File mainfolder = new File(Environment.getExternalStorageDirectory(), TAG);
+        if (!mainfolder.exists()) {
+            mainfolder.mkdirs();
+        }
+        File imagesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Images");
+        if (!imagesfolder.exists()) {
+            imagesfolder.mkdirs();
+        }
+        File filesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Files");
+        if (!filesfolder.exists()) {
+            filesfolder.mkdirs();
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
 
-        handler = new Handler();
-        runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                NavigationDrawerFragment.mDrawerLayout.closeDrawers();
-                mTopperFragment.setInitialText();
-                mTopperFragment.setInitialLogo();
-                ItemFragment.relativeLayout.setVisibility(View.INVISIBLE);
-
-            }
-        };
-        startHandler();
-
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -84,6 +85,22 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         TopperFragment.textViewTopper.startAnimation(animation);
 
         mItemFragment = (ItemFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_item);
+
+        handler = new Handler();
+        runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                NavigationDrawerFragment.mDrawerLayout.closeDrawers();
+                TopperFragment.imageViewTopper.startAnimation(animation);
+                TopperFragment.textViewTopper.startAnimation(animation);
+                mTopperFragment.setInitialText();
+                mTopperFragment.setInitialLogo();
+                ItemFragment.relativeLayout.setVisibility(View.INVISIBLE);
+
+            }
+        };
+        startHandler();
 
     }
 
@@ -121,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     @Override
     public void onNavigationDrawerItemSelected(String juiceType, String juiceBrand) {
+        TopperFragment.imageViewTopper.clearAnimation();
+        TopperFragment.textViewTopper.clearAnimation();
         if (juiceType.equals("Artesian")) {
             setItemFragmentArtesianList(juiceType, juiceBrand);
         } else if (juiceType.equals("Premium")) {
