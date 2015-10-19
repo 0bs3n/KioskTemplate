@@ -26,7 +26,9 @@ import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,54 +55,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         super.onCreate(savedInstanceState);
         setupKioskState();
         setContentView(R.layout.activity_main);
-
-        File mainfolder = new File(Environment.getExternalStorageDirectory(), TAG);
-        if (!mainfolder.exists()) {
-            mainfolder.mkdirs();
-        }
-        File imagesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Images");
-        if (!imagesfolder.exists()) {
-            imagesfolder.mkdirs();
-        }
-        File filesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Files");
-        if (!filesfolder.exists()) {
-            filesfolder.mkdirs();
-        }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-
         final Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-
-        mTopperFragment = (TopperFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_topper);
-        TopperFragment.imageViewTopper.setAnimation(animation);
-        TopperFragment.textViewTopper.setAnimation(animation);
-
-        TopperFragment.imageViewTopper.startAnimation(animation);
-        TopperFragment.textViewTopper.startAnimation(animation);
-
-        mItemFragment = (ItemFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_item);
-
-        handler = new Handler();
-        runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                NavigationDrawerFragment.mDrawerLayout.closeDrawers();
-                TopperFragment.imageViewTopper.startAnimation(animation);
-                TopperFragment.textViewTopper.startAnimation(animation);
-                mTopperFragment.setInitialText();
-                mTopperFragment.setInitialLogo();
-                ItemFragment.relativeLayout.setVisibility(View.INVISIBLE);
-
-            }
-        };
-        startHandler();
+        setExternalFolders();
+        setExternalFiles();
+        setContentFragments(toolbar, animation);
 
     }
 
@@ -157,6 +119,47 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     @Override
     public void onFragmentItemInteraction(String string) {
 
+    }
+
+    // A method to find height of the status bar
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    private void setContentFragments(Toolbar toolbar, final Animation animation) {
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+
+        mTopperFragment = (TopperFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_topper);
+        TopperFragment.imageViewTopper.setAnimation(animation);
+        TopperFragment.textViewTopper.setAnimation(animation);
+
+        TopperFragment.imageViewTopper.startAnimation(animation);
+        TopperFragment.textViewTopper.startAnimation(animation);
+
+        mItemFragment = (ItemFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_item);
+
+        handler = new Handler();
+        runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                NavigationDrawerFragment.mDrawerLayout.closeDrawers();
+                TopperFragment.imageViewTopper.startAnimation(animation);
+                TopperFragment.textViewTopper.startAnimation(animation);
+                mTopperFragment.setInitialText();
+                mTopperFragment.setInitialLogo();
+                ItemFragment.relativeLayout.setVisibility(View.INVISIBLE);
+
+            }
+        };
+        startHandler();
     }
 
     private void setupKioskState() {
@@ -237,6 +240,21 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
     }
 
+    private void setExternalFolders() {
+        File mainfolder = new File(Environment.getExternalStorageDirectory(), TAG);
+        if (!mainfolder.exists()) {
+            mainfolder.mkdirs();
+        }
+        File imagesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Images");
+        if (!imagesfolder.exists()) {
+            imagesfolder.mkdirs();
+        }
+        File filesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Files");
+        if (!filesfolder.exists()) {
+            filesfolder.mkdirs();
+        }
+    }
+
     private void setItemFragmentArtesianList(String juiceType, String juiceBrand) {
         mTopperFragment.setText(juiceBrand);
         Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/logo.png");
@@ -255,14 +273,95 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         mItemFragment.setupPremiumList(juiceType, premiumJuiceArrayList);
     }
 
-    // A method to find height of the status bar
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
+    private void setExternalFiles() {
+        InputStream inputStream = getResources().openRawResource(R.raw.navigation_header_images);
+        CSVFile csvFile = new CSVFile(inputStream);
+        ArrayList<String> dataList = csvFile.readSimpleList();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.bitmap_list_path));
+            for (int i = 0; i < dataList.size(); i++) {
+                writer.append(dataList.get(i) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return result;
+
+        inputStream = getResources().openRawResource(R.raw.artesian_categories);
+        csvFile = new CSVFile(inputStream);
+        dataList = csvFile.readSimpleList();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.artesian_categories_file));
+            for (int i = 0; i < dataList.size(); i++) {
+                writer.append(dataList.get(i) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inputStream = getResources().openRawResource(R.raw.artesian_juices);
+        csvFile = new CSVFile(inputStream);
+        artesianBlendArrayList.clear();
+        artesianBlendArrayList = csvFile.readCategory1Array();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.artesian_juice_file));
+            for (int i = 0; i < artesianBlendArrayList.size(); i++) {
+                writer.append(artesianBlendArrayList.get(i).getVqNumber() + ","
+                                + artesianBlendArrayList.get(i).getVqName() + ","
+                                + artesianBlendArrayList.get(i).getVqVGratio() + ","
+                                + artesianBlendArrayList.get(i).getVqDescription() + ","
+                                + artesianBlendArrayList.get(i).getVqCategory() + "\n"
+                );
+            }
+            writer.flush();
+            writer.close();
+            artesianBlendArrayList.clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inputStream = getResources().openRawResource(R.raw.premium_brands);
+        csvFile = new CSVFile(inputStream);
+        dataList = csvFile.readSimpleList();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.premium_brands_file));
+            for (int i = 0; i < dataList.size(); i++) {
+                writer.append(dataList.get(i) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inputStream = getResources().openRawResource(R.raw.premium_juices);
+        csvFile = new CSVFile(inputStream);
+        premiumJuiceArrayList.clear();
+        premiumJuiceArrayList = csvFile.readCategory2Array();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.premium_juice_file));
+            for (int i = 0; i < premiumJuiceArrayList.size(); i++) {
+                writer.append(premiumJuiceArrayList.get(i).getPjImageFilePath() + ","
+                                + premiumJuiceArrayList.get(i).getPjName() + ","
+                                + premiumJuiceArrayList.get(i).getPjVGratio() + ","
+                                + premiumJuiceArrayList.get(i).getPjPGratio() + ","
+                                + premiumJuiceArrayList.get(i).getPjManufacturer() + "\n"
+                );
+            }
+            writer.flush();
+            writer.close();
+            premiumJuiceArrayList.clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stopHandler() {
@@ -272,6 +371,5 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     public void startHandler() {
         handler.postDelayed(runnable, 60000);
     }
-
 
 }

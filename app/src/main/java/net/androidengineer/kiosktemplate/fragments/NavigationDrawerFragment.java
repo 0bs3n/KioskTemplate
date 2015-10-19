@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -139,7 +140,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        setViewFlipper(v);
+        //setViewFlipper(v);
         return v;
     }
 
@@ -157,7 +158,6 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void setViewFlipper(View v) {
         ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
-
         ArrayList<String> arrayListImageNames = getBitmapList();
         for (int i = 0; i < arrayListImageNames.size(); i++) {
             Bitmap mBitmap = getBitmap(arrayListImageNames.get(i));
@@ -288,7 +288,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private ArrayList<String> getBitmapList() {
         ArrayList<String> arrayListBitmap = new ArrayList<>();
-        String csvFile = getString(R.string.bitmap_list_path);
+        String csvFile = Environment.getExternalStorageDirectory() + getString(R.string.bitmap_list_path);
         BufferedReader br = null;
         String line = "";
         try {
