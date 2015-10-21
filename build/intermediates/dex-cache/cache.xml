@@ -2,20 +2,6 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\classes-999b66ab20c68a0e1811b597378d3dd8b5273f04.jar" />
-    </item>
-    <item
-        jar="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\exploded-aar\com.android.support\design\23.0.1\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
-        <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\classes-a5a804f28e5c9c9e7df7e9bde40e0193be829550.jar" />
-    </item>
-    <item
         jar="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
@@ -30,6 +16,20 @@
         <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-a92404953b185ed6b2773cd05797c3c7d0902d53.jar" />
     </item>
     <item
+        jar="C:\Users\Human\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-63172428e641d44537e83aa87a715e7263a041ba.jar" />
+    </item>
+    <item
+        jar="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\exploded-aar\com.android.support\design\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
+        <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\classes-a5a804f28e5c9c9e7df7e9bde40e0193be829550.jar" />
+    </item>
+    <item
         jar="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
@@ -37,11 +37,11 @@
         <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\classes-b42d7e50891ebf25a72ec4583965468ca40c938d.jar" />
     </item>
     <item
-        jar="C:\Users\Human\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jar="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-63172428e641d44537e83aa87a715e7263a041ba.jar" />
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Users\Human\StudioProjects\KioskTemplate\app\build\intermediates\pre-dexed\debug\classes-999b66ab20c68a0e1811b597378d3dd8b5273f04.jar" />
     </item>
 
 </items>

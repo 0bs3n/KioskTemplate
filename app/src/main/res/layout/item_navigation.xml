@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:src="@drawable/logo_thumbnail"
         android:layout_gravity="center_vertical" />
 
     <TextView
@@ -17,7 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/secondaryTextColor"
-        android:text="TEST"
         android:textSize="@dimen/abc_text_size_large_material"
         android:layout_gravity="center_vertical" />
 

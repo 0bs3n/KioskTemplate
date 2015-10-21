@@ -2,7 +2,9 @@ package net.androidengineer.kiosktemplate.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +60,9 @@ public class TopperFragment extends Fragment {
     }
 
     public void setInitialLogo() {
-        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/logo.png");
+        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()
+                + getString(R.string.images_directory_path)
+                + "logo.png");
         imageViewTopper.setImageBitmap(bitmap);
     }
 
@@ -67,12 +71,12 @@ public class TopperFragment extends Fragment {
     }
 
     public void setInitialText() {
-        textViewTopper.setText(readTextFile(getString(R.string.information_file)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            textViewTopper.setText(readTextFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.information_file)));
+        }
     }
 
-    /*
-     * Read a text file.
-     */
     public String readTextFile(String actualFile) {
 
         String contents = String.valueOf("");

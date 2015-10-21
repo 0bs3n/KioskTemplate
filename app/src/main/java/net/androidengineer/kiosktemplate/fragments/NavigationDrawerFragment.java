@@ -2,8 +2,6 @@ package net.androidengineer.kiosktemplate.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -16,10 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import net.androidengineer.kiosktemplate.R;
 import net.androidengineer.kiosktemplate.navigation.JuiceNavAdapter;
@@ -156,22 +152,22 @@ public class NavigationDrawerFragment extends Fragment {
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
-    private void setViewFlipper(View v) {
-        ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
-        ArrayList<String> arrayListImageNames = getBitmapList();
-        for (int i = 0; i < arrayListImageNames.size(); i++) {
-            Bitmap mBitmap = getBitmap(arrayListImageNames.get(i));
-            ImageView imageView = new ImageView(getActivity());
-            imageView.setImageBitmap(mBitmap);
-            mViewFlipper.addView(imageView);
-        }
-        System.gc();
-        Runtime.getRuntime().gc();
-
-        mViewFlipper.setAutoStart(true);
-        mViewFlipper.setFlipInterval(3500);
-        mViewFlipper.startFlipping();
-    }
+//    private void setViewFlipper(View v) {
+//        ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
+//        ArrayList<String> arrayListImageNames = getBitmapList();
+//        for (int i = 0; i < arrayListImageNames.size(); i++) {
+//            Bitmap mBitmap = getBitmap(arrayListImageNames.get(i));
+//            ImageView imageView = new ImageView(getActivity());
+//            imageView.setImageBitmap(mBitmap);
+//            mViewFlipper.addView(imageView);
+//        }
+//        System.gc();
+//        Runtime.getRuntime().gc();
+//
+//        mViewFlipper.setAutoStart(true);
+//        mViewFlipper.setFlipInterval(3500);
+//        mViewFlipper.startFlipping();
+//    }
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
@@ -223,7 +219,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void setupArtesianCategoryList() {
         artesianNavJuice.clear();
-        String csvFile = getString(R.string.artesian_categories_file);
+        String csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file);
         BufferedReader br = null;
         String line;
         String cvsSplitBy = ",";
@@ -232,7 +228,7 @@ public class NavigationDrawerFragment extends Fragment {
             while ((line = br.readLine()) != null) {
                 // use comma as separator
                 String[] _artesianjuice = line.split(cvsSplitBy);
-                artesianNavJuice.add(new JuiceNavItem(BitmapFactory.decodeResource(getResources(), R.drawable.logo_thumbnail), _artesianjuice[0]));
+                artesianNavJuice.add(new JuiceNavItem(_artesianjuice[0]));
             }
 
         } catch (IOException e) {
@@ -250,7 +246,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void setupPremiumBrandList() {
         premiumNavJuice.clear();
-        String csvFile = getString(R.string.premium_brands_file);
+        String csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file);
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -258,7 +254,7 @@ public class NavigationDrawerFragment extends Fragment {
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 String[] _premiumjuice = line.split(cvsSplitBy);
-                premiumNavJuice.add(new JuiceNavItem(BitmapFactory.decodeResource(getResources(), R.drawable.premium_thumbnail), _premiumjuice[0]));
+                premiumNavJuice.add(new JuiceNavItem(_premiumjuice[0]));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -273,42 +269,42 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
-    private Bitmap getBitmap(String filename) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(getString(R.string.download_directory_path) + filename, options);
-        Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
-
-        System.gc();
-        Runtime.getRuntime().gc();
-
-        return scaledBitmap;
-    }
-
-    private ArrayList<String> getBitmapList() {
-        ArrayList<String> arrayListBitmap = new ArrayList<>();
-        String csvFile = Environment.getExternalStorageDirectory() + getString(R.string.bitmap_list_path);
-        BufferedReader br = null;
-        String line = "";
-        try {
-            br = new BufferedReader(new FileReader(csvFile));
-            while ((line = br.readLine()) != null) {
-                arrayListBitmap.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return arrayListBitmap;
-    }
+//    private Bitmap getBitmap(String filename) {
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 4;
+//
+//        Bitmap bitmap = BitmapFactory.decodeFile( Environment.getExternalStorageDirectory() + getString(R.string.images_directory_path) + filename, options);
+//        Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
+//
+//        System.gc();
+//        Runtime.getRuntime().gc();
+//
+//        return scaledBitmap;
+//    }
+//
+//    private ArrayList<String> getBitmapList() {
+//        ArrayList<String> arrayListBitmap = new ArrayList<>();
+//        String csvFile = Environment.getExternalStorageDirectory() + getString(R.string.bitmap_list_path);
+//        BufferedReader br = null;
+//        String line = "";
+//        try {
+//            br = new BufferedReader(new FileReader(csvFile));
+//            while ((line = br.readLine()) != null) {
+//                arrayListBitmap.add(line);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (br != null) {
+//                try {
+//                    br.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        return arrayListBitmap;
+//    }
 
     /**
      * Callbacks interface that all activities using this fragment must implement.

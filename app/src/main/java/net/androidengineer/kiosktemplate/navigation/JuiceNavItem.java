@@ -14,6 +14,10 @@ public class JuiceNavItem {
         this.name = name;
     }
 
+    public JuiceNavItem(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return this.name;
     }

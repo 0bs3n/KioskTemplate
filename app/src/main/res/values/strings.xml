@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">Menu</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
     <string name="vgpgsplitview">-</string>
 
     <!-- Content Descriptions -->
     <string name="description_imageView">Brand Logo</string>
+    <string name="content_main_logo">Main Logo</string>
 
     <!-- Files -->
     <string name="artesian_categories_file">"/KioskMenu/Files/artesian_categories.csv"</string>
@@ -16,10 +15,9 @@
     <string name="premium_juice_file">"/KioskMenu/Files/premium_juices.csv"</string>
     <string name="bitmap_list_path">"/KioskMenu/Files/navigation_header_images.csv"</string>
     <string name="information_file">"/KioskMenu/Files/information_content.txt"</string>
+    <string name="images_directory_path">/KioskMenu/Images/</string>
 
-    <string name="content_main_logo">Main Logo</string>
     <string name="nav_list1_heading">House Categories</string>
     <string name="nav_list2_heading">Premium Brands</string>
-    <string name="download_directory_path">/sdcard/Download/</string>
 
 </resources>

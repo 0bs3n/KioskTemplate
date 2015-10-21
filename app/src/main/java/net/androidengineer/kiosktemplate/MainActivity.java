@@ -25,10 +25,12 @@ import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         super.onCreate(savedInstanceState);
         setupKioskState();
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
         setExternalFolders();
         setExternalFiles();
+        //setExternalImages();
         setContentFragments(toolbar, animation);
 
     }
@@ -121,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     }
 
-    // A method to find height of the status bar
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -188,7 +191,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     private void setupArtesianBrandList(String brand) {
         artesianBlendArrayList.clear();
-        String csvFile = "/sdcard/Download/artesian_juices.csv";
+        String csvFile = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file);
+        }
         BufferedReader br = null;
         String line;
         String cvsSplitBy = ",";
@@ -215,7 +221,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     private void setupPremiumBrandList(String brand) {
         premiumJuiceArrayList.clear();
-        String csvFile = "/sdcard/Download/premium_juices.csv";
+        String csvFile = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file);
+        }
         BufferedReader br = null;
         String line;
         String cvsSplitBy = ",";
@@ -241,17 +250,20 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     }
 
     private void setExternalFolders() {
-        File mainfolder = new File(Environment.getExternalStorageDirectory(), TAG);
-        if (!mainfolder.exists()) {
-            mainfolder.mkdirs();
-        }
-        File imagesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Images");
-        if (!imagesfolder.exists()) {
-            imagesfolder.mkdirs();
-        }
-        File filesfolder = new File(Environment.getExternalStorageDirectory() + "/" + TAG, "Files");
-        if (!filesfolder.exists()) {
-            filesfolder.mkdirs();
+        File mainfolder = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            mainfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), TAG);
+            if (!mainfolder.exists()) {
+                mainfolder.mkdirs();
+            }
+            File imagesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Images");
+            if (!imagesfolder.exists()) {
+                imagesfolder.mkdirs();
+            }
+            File filesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Files");
+            if (!filesfolder.exists()) {
+                filesfolder.mkdirs();
+            }
         }
     }
 
@@ -279,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         ArrayList<String> dataList = csvFile.readSimpleList();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.bitmap_list_path));
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path));
             for (int i = 0; i < dataList.size(); i++) {
                 writer.append(dataList.get(i) + "\n");
             }
@@ -294,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         dataList = csvFile.readSimpleList();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.artesian_categories_file));
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file));
             for (int i = 0; i < dataList.size(); i++) {
                 writer.append(dataList.get(i) + "\n");
             }
@@ -310,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         artesianBlendArrayList = csvFile.readCategory1Array();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.artesian_juice_file));
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_juice_file));
             for (int i = 0; i < artesianBlendArrayList.size(); i++) {
                 writer.append(artesianBlendArrayList.get(i).getVqNumber() + ","
                                 + artesianBlendArrayList.get(i).getVqName() + ","
@@ -331,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         dataList = csvFile.readSimpleList();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.premium_brands_file));
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file));
             for (int i = 0; i < dataList.size(); i++) {
                 writer.append(dataList.get(i) + "\n");
             }
@@ -347,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         premiumJuiceArrayList = csvFile.readCategory2Array();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStorageDirectory() + getString(R.string.premium_juice_file));
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_juice_file));
             for (int i = 0; i < premiumJuiceArrayList.size(); i++) {
                 writer.append(premiumJuiceArrayList.get(i).getPjImageFilePath() + ","
                                 + premiumJuiceArrayList.get(i).getPjName() + ","
@@ -362,6 +374,52 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        String informationContent = loadText(R.raw.information_content);
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.information_file));
+            writer.append(informationContent);
+            writer.flush();
+            writer.close();
+            premiumJuiceArrayList.clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+//    public void setExternalImages(){
+//        Field[] fields=R.raw.class.getFields();
+//        for(int count=0; count < fields.length; count++){
+//            Log.i("Raw Asset: ", fields[count].getName());
+//        }
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.raw.anml);
+//    }
+
+
+    public String loadText(int resourceId) {
+        StringBuilder contents = new StringBuilder();
+        try {
+            // The InputStream opens the resourceId and sends it to the buffer
+            InputStream is = this.getResources().openRawResource(resourceId);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            String readLine = null;
+            // While the BufferedReader readLine is not null
+            while ((readLine = br.readLine()) != null) {
+                contents.append(readLine);
+            }
+            // Close the InputStream and BufferedReader
+            is.close();
+            br.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return contents.toString();
     }
 
     public void stopHandler() {
