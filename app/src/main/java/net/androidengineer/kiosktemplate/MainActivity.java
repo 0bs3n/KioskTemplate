@@ -24,13 +24,8 @@ import net.androidengineer.kiosktemplate.fragments.TopperFragment;
 import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         TopperFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener {
 
     private final List blockedKeys = new ArrayList(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_HOME));
-    private final String TAG = "KioskMenu";
     NavigationDrawerFragment mNavigationDrawerFragment;
     TopperFragment mTopperFragment;
     ItemFragment mItemFragment;
@@ -57,17 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         super.onCreate(savedInstanceState);
         setupKioskState();
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
-
-        setExternalFolders();
-        setExternalFiles();
-        //setExternalImages();
-        setContentFragments(toolbar, animation);
-
+        setContentFragments();
     }
 
     @Override
@@ -134,9 +118,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         return result;
     }
 
-    private void setContentFragments(Toolbar toolbar, final Animation animation) {
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
+    private void setContentFragments() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
         mTopperFragment = (TopperFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_topper);
@@ -249,24 +238,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
     }
 
-    private void setExternalFolders() {
-        File mainfolder = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            mainfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), TAG);
-            if (!mainfolder.exists()) {
-                mainfolder.mkdirs();
-            }
-            File imagesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Images");
-            if (!imagesfolder.exists()) {
-                imagesfolder.mkdirs();
-            }
-            File filesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Files");
-            if (!filesfolder.exists()) {
-                filesfolder.mkdirs();
-            }
-        }
-    }
-
     private void setItemFragmentArtesianList(String juiceType, String juiceBrand) {
         mTopperFragment.setText(juiceBrand);
         Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/logo.png");
@@ -285,109 +256,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         mItemFragment.setupPremiumList(juiceType, premiumJuiceArrayList);
     }
 
-    private void setExternalFiles() {
-        InputStream inputStream = getResources().openRawResource(R.raw.navigation_header_images);
-        CSVFile csvFile = new CSVFile(inputStream);
-        ArrayList<String> dataList = csvFile.readSimpleList();
-        // save csv file on SDCard
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path));
-            for (int i = 0; i < dataList.size(); i++) {
-                writer.append(dataList.get(i) + "\n");
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        inputStream = getResources().openRawResource(R.raw.artesian_categories);
-        csvFile = new CSVFile(inputStream);
-        dataList = csvFile.readSimpleList();
-        // save csv file on SDCard
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file));
-            for (int i = 0; i < dataList.size(); i++) {
-                writer.append(dataList.get(i) + "\n");
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        inputStream = getResources().openRawResource(R.raw.artesian_juices);
-        csvFile = new CSVFile(inputStream);
-        artesianBlendArrayList.clear();
-        artesianBlendArrayList = csvFile.readCategory1Array();
-        // save csv file on SDCard
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_juice_file));
-            for (int i = 0; i < artesianBlendArrayList.size(); i++) {
-                writer.append(artesianBlendArrayList.get(i).getVqNumber() + ","
-                                + artesianBlendArrayList.get(i).getVqName() + ","
-                                + artesianBlendArrayList.get(i).getVqVGratio() + ","
-                                + artesianBlendArrayList.get(i).getVqDescription() + ","
-                                + artesianBlendArrayList.get(i).getVqCategory() + "\n"
-                );
-            }
-            writer.flush();
-            writer.close();
-            artesianBlendArrayList.clear();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        inputStream = getResources().openRawResource(R.raw.premium_brands);
-        csvFile = new CSVFile(inputStream);
-        dataList = csvFile.readSimpleList();
-        // save csv file on SDCard
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file));
-            for (int i = 0; i < dataList.size(); i++) {
-                writer.append(dataList.get(i) + "\n");
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        inputStream = getResources().openRawResource(R.raw.premium_juices);
-        csvFile = new CSVFile(inputStream);
-        premiumJuiceArrayList.clear();
-        premiumJuiceArrayList = csvFile.readCategory2Array();
-        // save csv file on SDCard
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_juice_file));
-            for (int i = 0; i < premiumJuiceArrayList.size(); i++) {
-                writer.append(premiumJuiceArrayList.get(i).getPjImageFilePath() + ","
-                                + premiumJuiceArrayList.get(i).getPjName() + ","
-                                + premiumJuiceArrayList.get(i).getPjVGratio() + ","
-                                + premiumJuiceArrayList.get(i).getPjPGratio() + ","
-                                + premiumJuiceArrayList.get(i).getPjManufacturer() + "\n"
-                );
-            }
-            writer.flush();
-            writer.close();
-            premiumJuiceArrayList.clear();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String informationContent = loadText(R.raw.information_content);
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.information_file));
-            writer.append(informationContent);
-            writer.flush();
-            writer.close();
-            premiumJuiceArrayList.clear();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
 //    public void setExternalImages(){
 //        Field[] fields=R.raw.class.getFields();
 //        for(int count=0; count < fields.length; count++){
@@ -395,32 +263,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 //        }
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.raw.anml);
 //    }
-
-
-    public String loadText(int resourceId) {
-        StringBuilder contents = new StringBuilder();
-        try {
-            // The InputStream opens the resourceId and sends it to the buffer
-            InputStream is = this.getResources().openRawResource(resourceId);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            String readLine = null;
-            // While the BufferedReader readLine is not null
-            while ((readLine = br.readLine()) != null) {
-                contents.append(readLine);
-            }
-            // Close the InputStream and BufferedReader
-            is.close();
-            br.close();
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-            return "";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-        return contents.toString();
-    }
 
     public void stopHandler() {
         handler.removeCallbacks(runnable);

@@ -17,13 +17,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import net.androidengineer.kiosktemplate.CSVFile;
 import net.androidengineer.kiosktemplate.R;
+import net.androidengineer.kiosktemplate.artesianblends.ArtesianBlend;
 import net.androidengineer.kiosktemplate.navigation.JuiceNavAdapter;
 import net.androidengineer.kiosktemplate.navigation.JuiceNavItem;
+import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +55,12 @@ public class NavigationDrawerFragment extends Fragment {
      * expands it. This shared preference tracks this.
      */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
-
+    public static DrawerLayout mDrawerLayout;
+    private final String TAG = "KioskMenu";
     /**
      * A pointer to the current callbacks instance (the Activity).
      */
     NavigationDrawerCallbacks mCallbacks;
-    public static DrawerLayout mDrawerLayout;
     View mFragmentContainerView;
     int mCurrentSelectedPosition = 0;
     boolean mFromSavedInstanceState;
@@ -63,6 +71,8 @@ public class NavigationDrawerFragment extends Fragment {
     List<JuiceNavItem> premiumNavJuice = new ArrayList<>();
     String _mNavFragType;
     String _mNavFragBrand;
+    private ArrayList<ArtesianBlend> artesianBlendArrayList = new ArrayList<>();
+    private ArrayList<PremiumJuice> premiumJuiceArrayList = new ArrayList<>();
     private ActionBarDrawerToggle mDrawerToggle;
 
     public NavigationDrawerFragment() {
@@ -100,6 +110,7 @@ public class NavigationDrawerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         //setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -109,6 +120,9 @@ public class NavigationDrawerFragment extends Fragment {
         assert v != null;
 
         mCallbacks = (NavigationDrawerCallbacks) getActivity();
+
+        setExternalFolders();
+        setExternalFiles();
 
         setupArtesianCategoryList();
         mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);
@@ -173,13 +187,47 @@ public class NavigationDrawerFragment extends Fragment {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
-    /**
-     * Users of this fragment must call this method to set up the navigation drawer interactions.
-     *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
-     * @param drawerLayout The DrawerLayout containing this fragment's UI.
-     */
+    private String loadText(int resourceId) {
+        StringBuilder contents = new StringBuilder();
+        try {
+            // The InputStream opens the resourceId and sends it to the buffer
+            InputStream is = this.getResources().openRawResource(resourceId);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            String readLine = null;
+            // While the BufferedReader readLine is not null
+            while ((readLine = br.readLine()) != null) {
+                contents.append(readLine);
+            }
+            // Close the InputStream and BufferedReader
+            is.close();
+            br.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return contents.toString();
+    }
+
     public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
+
+        String informationContent = loadText(R.raw.information_content);
+        String path = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.information_file);
+        }
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.append(informationContent);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -214,6 +262,116 @@ public class NavigationDrawerFragment extends Fragment {
                 mDrawerToggle.syncState();
             }
         });
+
+    }
+
+    private void setExternalFolders() {
+        File mainfolder = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            mainfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), TAG);
+            if (!mainfolder.exists()) {
+                mainfolder.mkdirs();
+            }
+            File imagesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Images");
+            if (!imagesfolder.exists()) {
+                imagesfolder.mkdirs();
+            }
+            File filesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Files");
+            if (!filesfolder.exists()) {
+                filesfolder.mkdirs();
+            }
+        }
+    }
+
+    private void setExternalFiles() {
+        InputStream inputStream = getResources().openRawResource(R.raw.navigation_header_images);
+        CSVFile csvFile = new CSVFile(inputStream);
+        ArrayList<String> dataList = csvFile.readSimpleList();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path));
+            for (int i = 0; i < dataList.size(); i++) {
+                writer.append(dataList.get(i) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inputStream = getResources().openRawResource(R.raw.artesian_categories);
+        csvFile = new CSVFile(inputStream);
+        dataList = csvFile.readSimpleList();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file));
+            for (int i = 0; i < dataList.size(); i++) {
+                writer.append(dataList.get(i) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inputStream = getResources().openRawResource(R.raw.artesian_juices);
+        csvFile = new CSVFile(inputStream);
+        artesianBlendArrayList.clear();
+        artesianBlendArrayList = csvFile.readCategory1Array();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_juice_file));
+            for (int i = 0; i < artesianBlendArrayList.size(); i++) {
+                writer.append(artesianBlendArrayList.get(i).getVqNumber() + ","
+                                + artesianBlendArrayList.get(i).getVqName() + ","
+                                + artesianBlendArrayList.get(i).getVqVGratio() + ","
+                                + artesianBlendArrayList.get(i).getVqDescription() + ","
+                                + artesianBlendArrayList.get(i).getVqCategory() + "\n"
+                );
+            }
+            writer.flush();
+            writer.close();
+            artesianBlendArrayList.clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inputStream = getResources().openRawResource(R.raw.premium_brands);
+        csvFile = new CSVFile(inputStream);
+        dataList = csvFile.readSimpleList();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file));
+            for (int i = 0; i < dataList.size(); i++) {
+                writer.append(dataList.get(i) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inputStream = getResources().openRawResource(R.raw.premium_juices);
+        csvFile = new CSVFile(inputStream);
+        premiumJuiceArrayList.clear();
+        premiumJuiceArrayList = csvFile.readCategory2Array();
+        // save csv file on SDCard
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_juice_file));
+            for (int i = 0; i < premiumJuiceArrayList.size(); i++) {
+                writer.append(premiumJuiceArrayList.get(i).getPjImageFilePath() + ","
+                                + premiumJuiceArrayList.get(i).getPjName() + ","
+                                + premiumJuiceArrayList.get(i).getPjVGratio() + ","
+                                + premiumJuiceArrayList.get(i).getPjPGratio() + ","
+                                + premiumJuiceArrayList.get(i).getPjManufacturer() + "\n"
+                );
+            }
+            writer.flush();
+            writer.close();
+            premiumJuiceArrayList.clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -306,13 +464,8 @@ public class NavigationDrawerFragment extends Fragment {
 //        return arrayListBitmap;
 //    }
 
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
     public interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
+
         void onNavigationDrawerItemSelected(String type, String brand);
     }
 

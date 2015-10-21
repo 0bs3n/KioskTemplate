@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,17 +38,14 @@ public class TopperFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_topper, container, false);
-
-
-        imageViewTopper = (ImageView) view.findViewById(R.id.imageViewMain);
-        setInitialLogo();
-
 
         textViewTopper = (TextView) view.findViewById(R.id.textViewMain);
         setInitialText();
+
+        imageViewTopper = (ImageView) view.findViewById(R.id.imageViewMain);
+        setInitialLogo();
 
         // Inflate the layout for this fragment
         return view;
@@ -58,6 +56,7 @@ public class TopperFragment extends Fragment {
         super.onDetach();
         mListenerFragmentTopper = null;
     }
+
 
     public void setInitialLogo() {
         Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()
@@ -71,9 +70,10 @@ public class TopperFragment extends Fragment {
     }
 
     public void setInitialText() {
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                + getString(R.string.information_file);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            textViewTopper.setText(readTextFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                    + getString(R.string.information_file)));
+            textViewTopper.setText(readTextFile(path));
         }
     }
 
@@ -82,22 +82,16 @@ public class TopperFragment extends Fragment {
         String contents = String.valueOf("");
 
         try {
-
             // Get the text file
             File file = new File(actualFile);
+            // read the file to get contents
+            Log.v("**KIOSK**", file.getPath());
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
 
-            // check if file is not empty
-            if (file.exists() && file.length() != 0) {
-
-                // read the file to get contents
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    // store the text file line to contents variable
-                    contents += (line + "\n");
-                }
-
+            while ((line = br.readLine()) != null) {
+                // store the text file line to contents variable
+                contents += (line + "\n");
             }
 
         } catch (Exception e) {
