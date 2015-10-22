@@ -17,7 +17,11 @@ import net.androidengineer.kiosktemplate.R;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class TopperFragment extends Fragment {
@@ -45,7 +49,7 @@ public class TopperFragment extends Fragment {
         setInitialText();
 
         imageViewTopper = (ImageView) view.findViewById(R.id.imageViewMain);
-        setInitialLogo();
+        //setInitialLogo();
 
         // Inflate the layout for this fragment
         return view;
@@ -57,6 +61,30 @@ public class TopperFragment extends Fragment {
         mListenerFragmentTopper = null;
     }
 
+    private String loadText(int resourceId) {
+        StringBuilder contents = new StringBuilder();
+        try {
+            // The InputStream opens the resourceId and sends it to the buffer
+            InputStream is = this.getResources().openRawResource(resourceId);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            String readLine = null;
+            // While the BufferedReader readLine is not null
+            while ((readLine = br.readLine()) != null) {
+                contents.append(readLine);
+            }
+            // Close the InputStream and BufferedReader
+            is.close();
+            br.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            return "";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return contents.toString();
+    }
 
     public void setInitialLogo() {
         Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()
@@ -70,6 +98,10 @@ public class TopperFragment extends Fragment {
     }
 
     public void setInitialText() {
+        textViewTopper.setText(loadText(R.raw.information_content));
+    }
+
+    public void setRefreshedText() {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                 + getString(R.string.information_file);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

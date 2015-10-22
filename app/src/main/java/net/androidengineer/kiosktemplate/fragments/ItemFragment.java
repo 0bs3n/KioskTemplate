@@ -8,20 +8,20 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import net.androidengineer.kiosktemplate.R;
-import net.androidengineer.kiosktemplate.artesianblends.ArtesianAdapter;
-import net.androidengineer.kiosktemplate.artesianblends.ArtesianBlend;
-import net.androidengineer.kiosktemplate.premiumjuices.PremiumAdapter;
-import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
+import net.androidengineer.kiosktemplate.adapters.ArtesianAdapter;
+import net.androidengineer.kiosktemplate.adapters.PremiumAdapter;
+import net.androidengineer.kiosktemplate.objects.ArtesianBlend;
+import net.androidengineer.kiosktemplate.objects.PremiumJuice;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ItemFragment extends ListFragment {
+    public static RelativeLayout relativeLayout;
     String mJuiceType;
     ArtesianAdapter artesianAdapter;
     PremiumAdapter premiumAdapter;
-    public static RelativeLayout relativeLayout;
     OnFragmentInteractionListener mListener;
     private List<ArtesianBlend> mArtesianItemList;
     private ArrayList<PremiumJuice> mPremiumItemList;

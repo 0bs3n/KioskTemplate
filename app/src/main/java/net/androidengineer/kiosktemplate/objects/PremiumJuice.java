@@ -1,4 +1,4 @@
-package net.androidengineer.kiosktemplate.premiumjuices;
+package net.androidengineer.kiosktemplate.objects;
 
 /**
  * Created by Human on 7/5/2015.

@@ -17,12 +17,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import net.androidengineer.kiosktemplate.CSVFile;
 import net.androidengineer.kiosktemplate.R;
-import net.androidengineer.kiosktemplate.artesianblends.ArtesianBlend;
-import net.androidengineer.kiosktemplate.navigation.JuiceNavAdapter;
-import net.androidengineer.kiosktemplate.navigation.JuiceNavItem;
-import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
+import net.androidengineer.kiosktemplate.adapters.JuiceNavAdapter;
+import net.androidengineer.kiosktemplate.objects.ArtesianBlend;
+import net.androidengineer.kiosktemplate.objects.CSVFile;
+import net.androidengineer.kiosktemplate.objects.JuiceNavItem;
+import net.androidengineer.kiosktemplate.objects.NavHeader;
+import net.androidengineer.kiosktemplate.objects.PremiumJuice;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -123,6 +124,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         setExternalFolders();
         setExternalFiles();
+        setDrawerCategories(v);
 
         setupArtesianCategoryList();
         mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);
@@ -214,19 +216,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
 
-        String informationContent = loadText(R.raw.information_content);
-        String path = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.information_file);
-        }
-        try {
-            FileWriter writer = new FileWriter(path);
-            writer.append(informationContent);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
@@ -373,11 +363,38 @@ public class NavigationDrawerFragment extends Fragment {
             e.printStackTrace();
         }
 
+        inputStream = getResources().openRawResource(R.raw.drawer_categories);
+        csvFile = new CSVFile(inputStream);
+        dataList = csvFile.readSimpleList();
+        try {
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.drawer_categories_file));
+            for (int i = 0; i < dataList.size(); i++) {
+                writer.append(dataList.get(i) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String informationContent = loadText(R.raw.information_content);
+        String path;
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.information_file);
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.append(informationContent);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void setupArtesianCategoryList() {
         artesianNavJuice.clear();
-        String csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file);
+        String csvFile;
+        csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file);
         BufferedReader br = null;
         String line;
         String cvsSplitBy = ",";
@@ -404,7 +421,8 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void setupPremiumBrandList() {
         premiumNavJuice.clear();
-        String csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file);
+        String csvFile = null;
+        csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file);
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -425,6 +443,36 @@ public class NavigationDrawerFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void setDrawerCategories(View view) {
+        String csvFile = null;
+        csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.drawer_categories_file);
+        BufferedReader bufferedReader = null;
+        String line = "";
+        String csvSplitBy = ",";
+        ArrayList<NavHeader> navHeaders = new ArrayList<>();
+        try {
+            bufferedReader = new BufferedReader(new FileReader(csvFile));
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] category = line.split(csvSplitBy);
+                navHeaders.add(new NavHeader(category[0]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        TextView category1TextView = (TextView) view.findViewById(R.id.textViewArtesianCategories);
+        category1TextView.setText(navHeaders.get(0).getCategory());
+        TextView category2TextView = (TextView) view.findViewById(R.id.textViewPremiumBrands);
+        category2TextView.setText(navHeaders.get(1).getCategory());
     }
 
 //    private Bitmap getBitmap(String filename) {

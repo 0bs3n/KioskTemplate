@@ -1,4 +1,4 @@
-package net.androidengineer.kiosktemplate.navigation;
+package net.androidengineer.kiosktemplate.objects;
 
 import android.graphics.Bitmap;
 

@@ -17,11 +17,11 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import net.androidengineer.kiosktemplate.artesianblends.ArtesianBlend;
 import net.androidengineer.kiosktemplate.fragments.ItemFragment;
 import net.androidengineer.kiosktemplate.fragments.NavigationDrawerFragment;
 import net.androidengineer.kiosktemplate.fragments.TopperFragment;
-import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
+import net.androidengineer.kiosktemplate.objects.ArtesianBlend;
+import net.androidengineer.kiosktemplate.objects.PremiumJuice;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 NavigationDrawerFragment.mDrawerLayout.closeDrawers();
                 TopperFragment.imageViewTopper.startAnimation(animation);
                 TopperFragment.textViewTopper.startAnimation(animation);
-                mTopperFragment.setInitialText();
+                mTopperFragment.setRefreshedText();
                 mTopperFragment.setInitialLogo();
                 ItemFragment.relativeLayout.setVisibility(View.INVISIBLE);
 

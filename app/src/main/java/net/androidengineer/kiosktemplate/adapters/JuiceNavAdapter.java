@@ -1,4 +1,4 @@
-package net.androidengineer.kiosktemplate.navigation;
+package net.androidengineer.kiosktemplate.adapters;
 /**
  * Created by James Campbell for exclusive use by The Vape Queen. All rights reserved.
  */
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.androidengineer.kiosktemplate.R;
+import net.androidengineer.kiosktemplate.objects.JuiceNavItem;
 
 import java.util.List;
 

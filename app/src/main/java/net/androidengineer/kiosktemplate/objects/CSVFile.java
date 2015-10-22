@@ -1,7 +1,4 @@
-package net.androidengineer.kiosktemplate;
-
-import net.androidengineer.kiosktemplate.artesianblends.ArtesianBlend;
-import net.androidengineer.kiosktemplate.premiumjuices.PremiumJuice;
+package net.androidengineer.kiosktemplate.objects;
 
 import java.io.BufferedReader;
 import java.io.IOException;

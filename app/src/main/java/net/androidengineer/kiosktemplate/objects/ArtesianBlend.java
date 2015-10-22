@@ -1,4 +1,4 @@
-package net.androidengineer.kiosktemplate.artesianblends;
+package net.androidengineer.kiosktemplate.objects;
 
 /**
  * Created by James Campbell for exclusive use by The Vape Queen. All rights reserved.

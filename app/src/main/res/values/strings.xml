@@ -15,9 +15,10 @@
     <string name="premium_juice_file">"/KioskMenu/Files/premium_juices.csv"</string>
     <string name="bitmap_list_path">"/KioskMenu/Files/navigation_header_images.csv"</string>
     <string name="information_file">"/KioskMenu/Files/information_content.txt"</string>
+    <string name="drawer_categories_file">"/KioskMenu/Files/drawer_categories.csv"</string>
     <string name="images_directory_path">/KioskMenu/Images/</string>
 
-    <string name="nav_list1_heading">House Categories</string>
-    <string name="nav_list2_heading">Premium Brands</string>
+    <string name="nav_list1_heading">Category 1</string>
+    <string name="nav_list2_heading">Category 2</string>
 
 </resources>

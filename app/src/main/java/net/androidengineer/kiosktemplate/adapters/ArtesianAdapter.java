@@ -1,4 +1,4 @@
-package net.androidengineer.kiosktemplate.artesianblends;
+package net.androidengineer.kiosktemplate.adapters;
 
 /**
  * Created by James Campbell for exclusive use by The Vape Queen. All rights reserved.
@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import net.androidengineer.kiosktemplate.R;
+import net.androidengineer.kiosktemplate.objects.ArtesianBlend;
 
 import java.util.List;
 
