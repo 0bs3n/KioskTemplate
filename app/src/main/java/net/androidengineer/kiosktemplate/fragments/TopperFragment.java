@@ -49,7 +49,7 @@ public class TopperFragment extends Fragment {
         setInitialText();
 
         imageViewTopper = (ImageView) view.findViewById(R.id.imageViewMain);
-        //setInitialLogo();
+        setInitialLogo();
 
         // Inflate the layout for this fragment
         return view;
@@ -87,9 +87,16 @@ public class TopperFragment extends Fragment {
     }
 
     public void setInitialLogo() {
-        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()
-                + getString(R.string.images_directory_path)
-                + "logo.png");
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        imageViewTopper.setImageBitmap(bitmap);
+    }
+
+    public void setRefreshLogo() {
+        Bitmap bitmap = BitmapFactory.decodeFile(
+                Environment.getExternalStorageDirectory()
+                        + getString(R.string.images_directory_path)
+                        + "logo.png"
+        );
         imageViewTopper.setImageBitmap(bitmap);
     }
 

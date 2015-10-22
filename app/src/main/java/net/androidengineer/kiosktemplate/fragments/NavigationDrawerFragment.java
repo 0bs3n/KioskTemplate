@@ -2,6 +2,8 @@ package net.androidengineer.kiosktemplate.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -14,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import net.androidengineer.kiosktemplate.R;
 import net.androidengineer.kiosktemplate.adapters.JuiceNavAdapter;
@@ -134,6 +138,7 @@ public class NavigationDrawerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 _mNavFragType = "Artesian";
                 _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
+
                 mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
                 mDrawerLayout.closeDrawer(mFragmentContainerView);
             }
@@ -152,7 +157,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        //setViewFlipper(v);
+        setViewFlipper(v);
         return v;
     }
 
@@ -168,25 +173,21 @@ public class NavigationDrawerFragment extends Fragment {
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
-//    private void setViewFlipper(View v) {
-//        ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
-//        ArrayList<String> arrayListImageNames = getBitmapList();
-//        for (int i = 0; i < arrayListImageNames.size(); i++) {
-//            Bitmap mBitmap = getBitmap(arrayListImageNames.get(i));
-//            ImageView imageView = new ImageView(getActivity());
-//            imageView.setImageBitmap(mBitmap);
-//            mViewFlipper.addView(imageView);
-//        }
-//        System.gc();
-//        Runtime.getRuntime().gc();
-//
-//        mViewFlipper.setAutoStart(true);
-//        mViewFlipper.setFlipInterval(3500);
-//        mViewFlipper.startFlipping();
-//    }
+    private void setViewFlipper(View v) {
+        ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
+        ArrayList<String> arrayListImageNames = getBitmapList();
+        for (int i = 0; i < arrayListImageNames.size(); i++) {
+            Bitmap mBitmap = getBitmap(arrayListImageNames.get(i));
+            ImageView imageView = new ImageView(getActivity());
+            imageView.setImageBitmap(mBitmap);
+            mViewFlipper.addView(imageView);
+        }
+        System.gc();
+        Runtime.getRuntime().gc();
 
-    public boolean isDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+        mViewFlipper.setAutoStart(true);
+        mViewFlipper.setFlipInterval(3500);
+        mViewFlipper.startFlipping();
     }
 
     private String loadText(int resourceId) {
@@ -215,9 +216,6 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
-
-
-
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -403,7 +401,12 @@ public class NavigationDrawerFragment extends Fragment {
             while ((line = br.readLine()) != null) {
                 // use comma as separator
                 String[] _artesianjuice = line.split(cvsSplitBy);
-                artesianNavJuice.add(new JuiceNavItem(_artesianjuice[0]));
+                artesianNavJuice.add(new JuiceNavItem(
+                        BitmapFactory.decodeFile(
+                                Environment.getExternalStorageDirectory()
+                                        + getString(R.string.images_directory_path)
+                                        + "category1_thumbnail.png"
+                        ), _artesianjuice[0]));
             }
 
         } catch (IOException e) {
@@ -422,7 +425,8 @@ public class NavigationDrawerFragment extends Fragment {
     private void setupPremiumBrandList() {
         premiumNavJuice.clear();
         String csvFile = null;
-        csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file);
+        csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                + getString(R.string.premium_brands_file);
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -430,7 +434,12 @@ public class NavigationDrawerFragment extends Fragment {
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 String[] _premiumjuice = line.split(cvsSplitBy);
-                premiumNavJuice.add(new JuiceNavItem(_premiumjuice[0]));
+                premiumNavJuice.add(new JuiceNavItem(
+                        BitmapFactory.decodeFile(
+                                Environment.getExternalStorageDirectory()
+                                        + getString(R.string.images_directory_path)
+                                        + "category2_thumbnail.png"
+                        ), _premiumjuice[0]));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -475,42 +484,42 @@ public class NavigationDrawerFragment extends Fragment {
         category2TextView.setText(navHeaders.get(1).getCategory());
     }
 
-//    private Bitmap getBitmap(String filename) {
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inSampleSize = 4;
-//
-//        Bitmap bitmap = BitmapFactory.decodeFile( Environment.getExternalStorageDirectory() + getString(R.string.images_directory_path) + filename, options);
-//        Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
-//
-//        System.gc();
-//        Runtime.getRuntime().gc();
-//
-//        return scaledBitmap;
-//    }
-//
-//    private ArrayList<String> getBitmapList() {
-//        ArrayList<String> arrayListBitmap = new ArrayList<>();
-//        String csvFile = Environment.getExternalStorageDirectory() + getString(R.string.bitmap_list_path);
-//        BufferedReader br = null;
-//        String line = "";
-//        try {
-//            br = new BufferedReader(new FileReader(csvFile));
-//            while ((line = br.readLine()) != null) {
-//                arrayListBitmap.add(line);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (br != null) {
-//                try {
-//                    br.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//        return arrayListBitmap;
-//    }
+    private Bitmap getBitmap(String filename) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + getString(R.string.images_directory_path) + filename, options);
+        Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
+
+        System.gc();
+        Runtime.getRuntime().gc();
+
+        return scaledBitmap;
+    }
+
+    private ArrayList<String> getBitmapList() {
+        ArrayList<String> arrayListBitmap = new ArrayList<>();
+        String csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path);
+        BufferedReader br = null;
+        String line = "";
+        try {
+            br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+                arrayListBitmap.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return arrayListBitmap;
+    }
 
     public interface NavigationDrawerCallbacks {
 

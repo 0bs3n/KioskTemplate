@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 TopperFragment.imageViewTopper.startAnimation(animation);
                 TopperFragment.textViewTopper.startAnimation(animation);
                 mTopperFragment.setRefreshedText();
-                mTopperFragment.setInitialLogo();
+                mTopperFragment.setRefreshLogo();
                 ItemFragment.relativeLayout.setVisibility(View.INVISIBLE);
 
             }
@@ -181,9 +181,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     private void setupArtesianBrandList(String brand) {
         artesianBlendArrayList.clear();
         String csvFile = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file);
-        }
+        csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                + getString(R.string.artesian_categories_file);
         BufferedReader br = null;
         String line;
         String cvsSplitBy = ",";
@@ -192,7 +191,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             while ((line = br.readLine()) != null) {
                 String[] _artesianblend = line.split(cvsSplitBy);
                 if (_artesianblend[5].equals(brand)) {
-                    artesianBlendArrayList.add(new ArtesianBlend(_artesianblend[0], _artesianblend[1], _artesianblend[2], _artesianblend[3], _artesianblend[4], _artesianblend[5]));
+                    artesianBlendArrayList.add(new ArtesianBlend(_artesianblend[0],
+                            _artesianblend[1],
+                            _artesianblend[2],
+                            _artesianblend[3],
+                            _artesianblend[4],
+                            _artesianblend[5]));
                 }
             }
         } catch (IOException e) {
@@ -240,7 +244,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     private void setItemFragmentArtesianList(String juiceType, String juiceBrand) {
         mTopperFragment.setText(juiceBrand);
-        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/logo.png");
+        Bitmap bitmap = BitmapFactory.decodeFile(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                        + getString(R.string.images_directory_path) + "logo.png"
+        );
         mTopperFragment.setImageViewTopper(bitmap);
         //Pass to List Fragment
         setupArtesianBrandList(juiceBrand);
@@ -249,20 +256,15 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     private void setItemFragmentPremiumList(String juiceType, String juiceBrand) {
         mTopperFragment.setText(juiceBrand);
-        Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/Download/" + juiceBrand.toLowerCase().replaceAll(" ", "") + ".bmp");
+        Bitmap bitmap = BitmapFactory.decodeFile(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                        + getString(R.string.images_directory_path) + juiceBrand.toLowerCase().replaceAll(" ", "") + ".bmp"
+        );
         mTopperFragment.setImageViewTopper(bitmap);
         //Pass to List Fragment
         setupPremiumBrandList(juiceBrand);
         mItemFragment.setupPremiumList(juiceType, premiumJuiceArrayList);
     }
-
-//    public void setExternalImages(){
-//        Field[] fields=R.raw.class.getFields();
-//        for(int count=0; count < fields.length; count++){
-//            Log.i("Raw Asset: ", fields[count].getName());
-//        }
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.raw.anml);
-//    }
 
     public void stopHandler() {
         handler.removeCallbacks(runnable);
