@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         artesianBlendArrayList.clear();
         String csvFile = null;
         csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                + getString(R.string.artesian_categories_file);
+                + getString(R.string.artesian_juice_file);
         BufferedReader br = null;
         String line;
         String cvsSplitBy = ",";
@@ -216,7 +216,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         premiumJuiceArrayList.clear();
         String csvFile = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file);
+            csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.premium_juice_file);
         }
         BufferedReader br = null;
         String line;

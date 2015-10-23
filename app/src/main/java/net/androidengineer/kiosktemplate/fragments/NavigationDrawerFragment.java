@@ -32,39 +32,25 @@ import net.androidengineer.kiosktemplate.objects.PremiumJuice;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment used for managing interactions for and presentation of a navigation drawer.
- * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
- * design guidelines</a> for a complete explanation of the behaviors implemented here.
- */
+
 public class NavigationDrawerFragment extends Fragment {
 
     public static final String PREF_FILE_NAME = "testpref";
     public static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
-
-    /**
-     * Remember the position of the selected item.
-     */
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
-
-    /**
-     * Per the design guidelines, you should show the drawer on launch until the user manually
-     * expands it. This shared preference tracks this.
-     */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     public static DrawerLayout mDrawerLayout;
-    private final String TAG = "KioskMenu";
-    /**
-     * A pointer to the current callbacks instance (the Activity).
-     */
+
     NavigationDrawerCallbacks mCallbacks;
     View mFragmentContainerView;
     int mCurrentSelectedPosition = 0;
@@ -90,11 +76,6 @@ public class NavigationDrawerFragment extends Fragment {
         editor.apply();
     }
 
-    public static String readFromPreferences(Context context, String preferenceName, String preferenceValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(preferenceName, preferenceValue);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,14 +89,6 @@ public class NavigationDrawerFragment extends Fragment {
             mFromSavedInstanceState = true;
 
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-        //setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -256,6 +229,7 @@ public class NavigationDrawerFragment extends Fragment {
     private void setExternalFolders() {
         File mainfolder = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            String TAG = "KioskMenu";
             mainfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), TAG);
             if (!mainfolder.exists()) {
                 mainfolder.mkdirs();
@@ -272,6 +246,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void setExternalFiles() {
+
+        //region "TextFiles"
         InputStream inputStream = getResources().openRawResource(R.raw.navigation_header_images);
         CSVFile csvFile = new CSVFile(inputStream);
         ArrayList<String> dataList = csvFile.readSimpleList();
@@ -313,6 +289,7 @@ public class NavigationDrawerFragment extends Fragment {
                 writer.append(artesianBlendArrayList.get(i).getVqNumber() + ","
                                 + artesianBlendArrayList.get(i).getVqName() + ","
                                 + artesianBlendArrayList.get(i).getVqVGratio() + ","
+                                + artesianBlendArrayList.get(i).getVqPGratio() + ","
                                 + artesianBlendArrayList.get(i).getVqDescription() + ","
                                 + artesianBlendArrayList.get(i).getVqCategory() + "\n"
                 );
@@ -351,6 +328,7 @@ public class NavigationDrawerFragment extends Fragment {
                                 + premiumJuiceArrayList.get(i).getPjName() + ","
                                 + premiumJuiceArrayList.get(i).getPjVGratio() + ","
                                 + premiumJuiceArrayList.get(i).getPjPGratio() + ","
+                                + premiumJuiceArrayList.get(i).getPjDescription() + ","
                                 + premiumJuiceArrayList.get(i).getPjManufacturer() + "\n"
                 );
             }
@@ -386,7 +364,95 @@ public class NavigationDrawerFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //endregion
 
+        //region "ImageFiles"
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.about_your_company);
+        try {
+            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.images_directory_path) + "about_your_company.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.your_ad_here);
+        try {
+            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.images_directory_path) + "your_ad_here.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.your_gallery_here);
+        try {
+            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.images_directory_path) + "your_gallery_here.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.your_products);
+        try {
+            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.images_directory_path) + "your_products.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.your_services);
+        try {
+            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.images_directory_path) + "your_services.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        try {
+            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.images_directory_path) + "logo.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo_thumbnail);
+        try {
+            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                    + getString(R.string.images_directory_path) + "logo_thumbnail.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            bitmap = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //endregion
     }
 
     private void setupArtesianCategoryList() {
@@ -403,9 +469,9 @@ public class NavigationDrawerFragment extends Fragment {
                 String[] _artesianjuice = line.split(cvsSplitBy);
                 artesianNavJuice.add(new JuiceNavItem(
                         BitmapFactory.decodeFile(
-                                Environment.getExternalStorageDirectory()
+                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                                         + getString(R.string.images_directory_path)
-                                        + "category1_thumbnail.png"
+                                        + "logo_thumbnail.png"
                         ), _artesianjuice[0]));
             }
 
@@ -436,9 +502,9 @@ public class NavigationDrawerFragment extends Fragment {
                 String[] _premiumjuice = line.split(cvsSplitBy);
                 premiumNavJuice.add(new JuiceNavItem(
                         BitmapFactory.decodeFile(
-                                Environment.getExternalStorageDirectory()
+                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                                         + getString(R.string.images_directory_path)
-                                        + "category2_thumbnail.png"
+                                        + "logo_thumbnail.png"
                         ), _premiumjuice[0]));
             }
         } catch (IOException e) {
@@ -488,7 +554,8 @@ public class NavigationDrawerFragment extends Fragment {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 4;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + getString(R.string.images_directory_path) + filename, options);
+        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                + getString(R.string.images_directory_path) + filename, options);
         Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
 
         System.gc();
