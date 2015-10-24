@@ -10,7 +10,7 @@
         layout="@layout/nav_header" />
 
     <TextView
-        android:id="@+id/textViewArtesianCategories"
+        android:id="@+id/textViewCategories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/primaryTextColor"
@@ -18,22 +18,8 @@
         android:textStyle="italic" />
 
     <ListView
-        android:id="@+id/listviewArtesianCategories"
+        android:id="@+id/listviewCategories"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_list_height" />
-
-    <TextView
-        android:id="@+id/textViewPremiumBrands"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="@dimen/abc_text_size_headline_material"
-        android:textStyle="italic" />
-
-    <ListView
-        android:id="@+id/listviewPremiumBrands"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_list_height" />
-
+        android:layout_height="match_parent" />
 
 </LinearLayout>

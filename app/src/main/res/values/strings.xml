@@ -1,24 +1,20 @@
 <resources>
-    <string name="app_name">Menu</string>
+    <string name="app_name">Kiosk</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
-    <string name="vgpgsplitview">-</string>
 
     <!-- Content Descriptions -->
     <string name="description_imageView">Brand Logo</string>
     <string name="content_main_logo">Main Logo</string>
 
     <!-- Files -->
-    <string name="artesian_categories_file">"/KioskMenu/Files/artesian_categories.csv"</string>
-    <string name="artesian_juice_file">"/KioskMenu/Files/artesian_juices.csv"</string>
-    <string name="premium_brands_file">"/KioskMenu/Files/premium_brands.csv"</string>
-    <string name="premium_juice_file">"/KioskMenu/Files/premium_juices.csv"</string>
-    <string name="bitmap_list_path">"/KioskMenu/Files/navigation_header_images.csv"</string>
+    <string name="premium_brands_file">"/KioskMenu/Files/nav_sections.csv"</string>
+    <string name="products_file">"/KioskMenu/Files/products.csv"</string>
+    <string name="bitmap_list_path">"/KioskMenu/Files/nav_header_images.csv"</string>
     <string name="information_file">"/KioskMenu/Files/information_content.txt"</string>
-    <string name="drawer_categories_file">"/KioskMenu/Files/drawer_categories.csv"</string>
+    <string name="drawer_categories_file">"/KioskMenu/Files/nav_categories.csv"</string>
     <string name="images_directory_path">/KioskMenu/Images/</string>
 
-    <string name="nav_list1_heading">Category 1</string>
-    <string name="nav_list2_heading">Category 2</string>
+    <string name="nav_list1_heading">Change Me</string>
 
 </resources>

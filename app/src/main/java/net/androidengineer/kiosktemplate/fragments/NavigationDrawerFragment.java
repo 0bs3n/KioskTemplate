@@ -22,12 +22,11 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import net.androidengineer.kiosktemplate.R;
-import net.androidengineer.kiosktemplate.adapters.JuiceNavAdapter;
-import net.androidengineer.kiosktemplate.objects.ArtesianBlend;
+import net.androidengineer.kiosktemplate.adapters.NavAdapter;
 import net.androidengineer.kiosktemplate.objects.CSVFile;
-import net.androidengineer.kiosktemplate.objects.JuiceNavItem;
 import net.androidengineer.kiosktemplate.objects.NavHeader;
-import net.androidengineer.kiosktemplate.objects.PremiumJuice;
+import net.androidengineer.kiosktemplate.objects.NavItem;
+import net.androidengineer.kiosktemplate.objects.ProductItem;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,14 +55,11 @@ public class NavigationDrawerFragment extends Fragment {
     int mCurrentSelectedPosition = 0;
     boolean mFromSavedInstanceState;
     boolean mUserLearnedDrawer;
-    ListView mDrawerArtesianListView;
-    ListView mDrawerPremiumListView;
-    List<JuiceNavItem> artesianNavJuice = new ArrayList<>();
-    List<JuiceNavItem> premiumNavJuice = new ArrayList<>();
+    ListView mDrawerListView;
+    List<NavItem> navItemArrayList = new ArrayList<>();
     String _mNavFragType;
     String _mNavFragBrand;
-    private ArrayList<ArtesianBlend> artesianBlendArrayList = new ArrayList<>();
-    private ArrayList<PremiumJuice> premiumJuiceArrayList = new ArrayList<>();
+    private ArrayList<ProductItem> productItemArrayList = new ArrayList<>();
     private ActionBarDrawerToggle mDrawerToggle;
 
     public NavigationDrawerFragment() {
@@ -87,7 +83,6 @@ public class NavigationDrawerFragment extends Fragment {
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
-
         }
     }
 
@@ -103,24 +98,10 @@ public class NavigationDrawerFragment extends Fragment {
         setExternalFiles();
         setDrawerCategories(v);
 
-        setupArtesianCategoryList();
-        mDrawerArtesianListView = (ListView) v.findViewById(R.id.listviewArtesianCategories);
-        mDrawerArtesianListView.setAdapter(new JuiceNavAdapter(artesianNavJuice, inflater));
-        mDrawerArtesianListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                _mNavFragType = "Artesian";
-                _mNavFragBrand = ((TextView) view.findViewById(R.id.textViewNavItem)).getText().toString();
-
-                mCallbacks.onNavigationDrawerItemSelected(_mNavFragType, _mNavFragBrand);
-                mDrawerLayout.closeDrawer(mFragmentContainerView);
-            }
-        });
-
-        setupPremiumBrandList();
-        mDrawerPremiumListView = (ListView) v.findViewById(R.id.listviewPremiumBrands);
-        mDrawerPremiumListView.setAdapter(new JuiceNavAdapter(premiumNavJuice, inflater));
-        mDrawerPremiumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        setupNavSections();
+        mDrawerListView = (ListView) v.findViewById(R.id.listviewCategories);
+        mDrawerListView.setAdapter(new NavAdapter(navItemArrayList, inflater));
+        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 _mNavFragType = "Premium";
@@ -248,7 +229,7 @@ public class NavigationDrawerFragment extends Fragment {
     private void setExternalFiles() {
 
         //region "TextFiles"
-        InputStream inputStream = getResources().openRawResource(R.raw.navigation_header_images);
+        InputStream inputStream = getResources().openRawResource(R.raw.nav_header_images);
         CSVFile csvFile = new CSVFile(inputStream);
         ArrayList<String> dataList = csvFile.readSimpleList();
         // save csv file on SDCard
@@ -263,45 +244,7 @@ public class NavigationDrawerFragment extends Fragment {
             e.printStackTrace();
         }
 
-        inputStream = getResources().openRawResource(R.raw.artesian_categories);
-        csvFile = new CSVFile(inputStream);
-        dataList = csvFile.readSimpleList();
-        // save csv file on SDCard
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file));
-            for (int i = 0; i < dataList.size(); i++) {
-                writer.append(dataList.get(i) + "\n");
-            }
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        inputStream = getResources().openRawResource(R.raw.artesian_juices);
-        csvFile = new CSVFile(inputStream);
-        artesianBlendArrayList.clear();
-        artesianBlendArrayList = csvFile.readCategory1Array();
-        // save csv file on SDCard
-        try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_juice_file));
-            for (int i = 0; i < artesianBlendArrayList.size(); i++) {
-                writer.append(artesianBlendArrayList.get(i).getVqNumber() + ","
-                                + artesianBlendArrayList.get(i).getVqName() + ","
-                                + artesianBlendArrayList.get(i).getVqVGratio() + ","
-                                + artesianBlendArrayList.get(i).getVqPGratio() + ","
-                                + artesianBlendArrayList.get(i).getVqDescription() + ","
-                                + artesianBlendArrayList.get(i).getVqCategory() + "\n"
-                );
-            }
-            writer.flush();
-            writer.close();
-            artesianBlendArrayList.clear();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        inputStream = getResources().openRawResource(R.raw.premium_brands);
+        inputStream = getResources().openRawResource(R.raw.nav_sections);
         csvFile = new CSVFile(inputStream);
         dataList = csvFile.readSimpleList();
         // save csv file on SDCard
@@ -316,30 +259,30 @@ public class NavigationDrawerFragment extends Fragment {
             e.printStackTrace();
         }
 
-        inputStream = getResources().openRawResource(R.raw.premium_juices);
+        inputStream = getResources().openRawResource(R.raw.products);
         csvFile = new CSVFile(inputStream);
-        premiumJuiceArrayList.clear();
-        premiumJuiceArrayList = csvFile.readCategory2Array();
+        productItemArrayList.clear();
+        productItemArrayList = csvFile.readProductArray();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_juice_file));
-            for (int i = 0; i < premiumJuiceArrayList.size(); i++) {
-                writer.append(premiumJuiceArrayList.get(i).getPjImageFilePath() + ","
-                                + premiumJuiceArrayList.get(i).getPjName() + ","
-                                + premiumJuiceArrayList.get(i).getPjVGratio() + ","
-                                + premiumJuiceArrayList.get(i).getPjPGratio() + ","
-                                + premiumJuiceArrayList.get(i).getPjDescription() + ","
-                                + premiumJuiceArrayList.get(i).getPjManufacturer() + "\n"
+            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.products_file));
+            for (int i = 0; i < productItemArrayList.size(); i++) {
+                writer.append(productItemArrayList.get(i).getImageFilePath() + ","
+                                + productItemArrayList.get(i).getName() + ","
+                                + productItemArrayList.get(i).getPrice() + ","
+                                + productItemArrayList.get(i).getSKU() + ","
+                                + productItemArrayList.get(i).getDescription() + ","
+                                + productItemArrayList.get(i).getCategory() + "\n"
                 );
             }
             writer.flush();
             writer.close();
-            premiumJuiceArrayList.clear();
+            productItemArrayList.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        inputStream = getResources().openRawResource(R.raw.drawer_categories);
+        inputStream = getResources().openRawResource(R.raw.nav_categories);
         csvFile = new CSVFile(inputStream);
         dataList = csvFile.readSimpleList();
         try {
@@ -455,41 +398,8 @@ public class NavigationDrawerFragment extends Fragment {
         //endregion
     }
 
-    private void setupArtesianCategoryList() {
-        artesianNavJuice.clear();
-        String csvFile;
-        csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.artesian_categories_file);
-        BufferedReader br = null;
-        String line;
-        String cvsSplitBy = ",";
-        try {
-            br = new BufferedReader(new FileReader(csvFile));
-            while ((line = br.readLine()) != null) {
-                // use comma as separator
-                String[] _artesianjuice = line.split(cvsSplitBy);
-                artesianNavJuice.add(new JuiceNavItem(
-                        BitmapFactory.decodeFile(
-                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                                        + getString(R.string.images_directory_path)
-                                        + "logo_thumbnail.png"
-                        ), _artesianjuice[0]));
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void setupPremiumBrandList() {
-        premiumNavJuice.clear();
+    private void setupNavSections() {
+        navItemArrayList.clear();
         String csvFile = null;
         csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                 + getString(R.string.premium_brands_file);
@@ -500,7 +410,7 @@ public class NavigationDrawerFragment extends Fragment {
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
                 String[] _premiumjuice = line.split(cvsSplitBy);
-                premiumNavJuice.add(new JuiceNavItem(
+                navItemArrayList.add(new NavItem(
                         BitmapFactory.decodeFile(
                                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                                         + getString(R.string.images_directory_path)
@@ -544,10 +454,8 @@ public class NavigationDrawerFragment extends Fragment {
                 }
             }
         }
-        TextView category1TextView = (TextView) view.findViewById(R.id.textViewArtesianCategories);
+        TextView category1TextView = (TextView) view.findViewById(R.id.textViewCategories);
         category1TextView.setText(navHeaders.get(0).getCategory());
-        TextView category2TextView = (TextView) view.findViewById(R.id.textViewPremiumBrands);
-        category2TextView.setText(navHeaders.get(1).getCategory());
     }
 
     private Bitmap getBitmap(String filename) {

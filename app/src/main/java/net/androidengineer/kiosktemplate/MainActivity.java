@@ -20,8 +20,7 @@ import android.view.animation.AnimationUtils;
 import net.androidengineer.kiosktemplate.fragments.ItemFragment;
 import net.androidengineer.kiosktemplate.fragments.NavigationDrawerFragment;
 import net.androidengineer.kiosktemplate.fragments.TopperFragment;
-import net.androidengineer.kiosktemplate.objects.ArtesianBlend;
-import net.androidengineer.kiosktemplate.objects.PremiumJuice;
+import net.androidengineer.kiosktemplate.objects.ProductItem;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -31,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by James Campbell for exclusive use by The Vape Queen. All rights reserved.
+ * Created by James Campbell. All rights reserved.
  */
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         TopperFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener {
@@ -43,8 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     Handler handler;
     Runnable runnable;
 
-    private ArrayList<ArtesianBlend> artesianBlendArrayList = new ArrayList<>();
-    private ArrayList<PremiumJuice> premiumJuiceArrayList = new ArrayList<>();
+    private ArrayList<ProductItem> productItemArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +89,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         TopperFragment.imageViewTopper.clearAnimation();
         TopperFragment.textViewTopper.clearAnimation();
         if (juiceType.equals("Artesian")) {
-            setItemFragmentArtesianList(juiceType, juiceBrand);
+            setItemFragment(juiceType, juiceBrand);
         } else if (juiceType.equals("Premium")) {
-            setItemFragmentPremiumList(juiceType, juiceBrand);
+            setItemFragment(juiceType, juiceBrand);
         } else {
             //Nothing To See Here. Move Along.
         }
@@ -178,25 +176,25 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 255);
     }
 
-    private void setupArtesianBrandList(String brand) {
-        artesianBlendArrayList.clear();
+    private void setupProductListView(String brand) {
+        productItemArrayList.clear();
         String csvFile = null;
         csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                + getString(R.string.artesian_juice_file);
+                + getString(R.string.products_file);
         BufferedReader br = null;
         String line;
         String cvsSplitBy = ",";
         try {
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
-                String[] _artesianblend = line.split(cvsSplitBy);
-                if (_artesianblend[5].equals(brand)) {
-                    artesianBlendArrayList.add(new ArtesianBlend(_artesianblend[0],
-                            _artesianblend[1],
-                            _artesianblend[2],
-                            _artesianblend[3],
-                            _artesianblend[4],
-                            _artesianblend[5]));
+                String[] result = line.split(cvsSplitBy);
+                if (result[5].equals(brand)) {
+                    productItemArrayList.add(new ProductItem(result[0],
+                            result[1],
+                            result[2],
+                            result[3],
+                            result[4],
+                            result[5]));
                 }
             }
         } catch (IOException e) {
@@ -212,50 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
     }
 
-    private void setupPremiumBrandList(String brand) {
-        premiumJuiceArrayList.clear();
-        String csvFile = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                    + getString(R.string.premium_juice_file);
-        }
-        BufferedReader br = null;
-        String line;
-        String cvsSplitBy = ",";
-        try {
-            br = new BufferedReader(new FileReader(csvFile));
-            while ((line = br.readLine()) != null) {
-                String[] _premiumjuice = line.split(cvsSplitBy);
-                if (_premiumjuice[5].equals(brand)) {
-                    premiumJuiceArrayList.add(new PremiumJuice(_premiumjuice[0], _premiumjuice[1], _premiumjuice[2], _premiumjuice[3], _premiumjuice[4], _premiumjuice[5]));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void setItemFragmentArtesianList(String juiceType, String juiceBrand) {
-        mTopperFragment.setText(juiceBrand);
-        Bitmap bitmap = BitmapFactory.decodeFile(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                        + getString(R.string.images_directory_path) + "logo.png"
-        );
-        mTopperFragment.setImageViewTopper(bitmap);
-        //Pass to List Fragment
-        setupArtesianBrandList(juiceBrand);
-        mItemFragment.setupArtesianList(juiceType, artesianBlendArrayList);
-    }
-
-    private void setItemFragmentPremiumList(String juiceType, String juiceBrand) {
+    private void setItemFragment(String juiceType, String juiceBrand) {
         mTopperFragment.setText(juiceBrand);
         Bitmap bitmap = BitmapFactory.decodeFile(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
@@ -263,8 +218,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         );
         mTopperFragment.setImageViewTopper(bitmap);
         //Pass to List Fragment
-        setupPremiumBrandList(juiceBrand);
-        mItemFragment.setupPremiumList(juiceType, premiumJuiceArrayList);
+        setupProductListView(juiceBrand);
+        mItemFragment.setupProductList(juiceType, productItemArrayList);
     }
 
     public void stopHandler() {

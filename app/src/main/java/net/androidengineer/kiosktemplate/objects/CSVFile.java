@@ -9,8 +9,7 @@ import java.util.ArrayList;
 public class CSVFile {
     InputStream inputStream;
 
-    private ArrayList<ArtesianBlend> artesianBlendArrayList = new ArrayList<>();
-    private ArrayList<PremiumJuice> premiumJuiceArrayList = new ArrayList<>();
+    private ArrayList<ProductItem> productItemArrayList = new ArrayList<>();
 
     public CSVFile(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -31,36 +30,22 @@ public class CSVFile {
         return resultList;
     }
 
-    public ArrayList<ArtesianBlend> readCategory1Array() {
-        artesianBlendArrayList.clear();
+    public ArrayList<ProductItem> readProductArray() {
+        productItemArrayList.clear();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         String csvLine;
         try {
             while ((csvLine = reader.readLine()) != null) {
                 String[] row = csvLine.split(",");
-                artesianBlendArrayList.add(new ArtesianBlend(row[0], row[1], row[2], row[3], row[4], row[5]));
+                productItemArrayList.add(new ProductItem(row[0], row[1], row[2], row[3], row[4], row[5]));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return artesianBlendArrayList;
+        return productItemArrayList;
     }
 
-    public ArrayList<PremiumJuice> readCategory2Array() {
-        premiumJuiceArrayList.clear();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String csvLine;
-        try {
-            while ((csvLine = reader.readLine()) != null) {
-                String[] row = csvLine.split(",");
-                premiumJuiceArrayList.add(new PremiumJuice(row[0], row[1], row[2], row[3], row[4], row[5]));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return premiumJuiceArrayList;
-    }
 }

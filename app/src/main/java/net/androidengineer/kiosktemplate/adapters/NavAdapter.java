@@ -11,17 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.androidengineer.kiosktemplate.R;
-import net.androidengineer.kiosktemplate.objects.JuiceNavItem;
+import net.androidengineer.kiosktemplate.objects.NavItem;
 
 import java.util.List;
 
-public class JuiceNavAdapter extends BaseAdapter {
+public class NavAdapter extends BaseAdapter {
 
-    private List<JuiceNavItem> juiceNavItems;
+    private List<NavItem> navItems;
     private LayoutInflater vi;
 
-    public JuiceNavAdapter(List<JuiceNavItem> juiceNavItems, LayoutInflater inflater) {
-        this.juiceNavItems = juiceNavItems;
+    public NavAdapter(List<NavItem> navItems, LayoutInflater inflater) {
+        this.navItems = navItems;
         vi = inflater;
     }
 
@@ -30,7 +30,7 @@ public class JuiceNavAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return juiceNavItems.size();
+        return navItems.size();
     }
 
     /**
@@ -38,7 +38,7 @@ public class JuiceNavAdapter extends BaseAdapter {
      */
     @Override
     public Object getItem(int position) {
-        return juiceNavItems.get(position);
+        return navItems.get(position);
     }
 
     /**
@@ -66,7 +66,7 @@ public class JuiceNavAdapter extends BaseAdapter {
         } else {
             itemAdapter = (ViewItem) convertView.getTag();
         }
-        JuiceNavItem currentJuice = juiceNavItems.get(position);
+        NavItem currentJuice = navItems.get(position);
         // Add received info to UI
         itemAdapter.jImage.setImageBitmap(currentJuice.getBitmap());
         itemAdapter.jName.setText(currentJuice.getName());
@@ -74,8 +74,8 @@ public class JuiceNavAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void refreshDeviceList(List<JuiceNavItem> list) {
-        this.juiceNavItems = list;
+    public void refreshDeviceList(List<NavItem> list) {
+        this.navItems = list;
         notifyDataSetChanged();
     }
 

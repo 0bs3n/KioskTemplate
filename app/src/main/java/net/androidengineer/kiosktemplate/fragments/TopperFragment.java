@@ -93,7 +93,7 @@ public class TopperFragment extends Fragment {
 
     public void setRefreshLogo() {
         Bitmap bitmap = BitmapFactory.decodeFile(
-                Environment.getExternalStorageDirectory()
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                         + getString(R.string.images_directory_path)
                         + "logo.png"
         );

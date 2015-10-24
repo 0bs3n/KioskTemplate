@@ -5,16 +5,16 @@ import android.graphics.Bitmap;
 /**
  * Created by Human on 7/20/2015.
  */
-public class JuiceNavItem {
+public class NavItem {
     Bitmap bitmap;
     String name;
 
-    public JuiceNavItem(Bitmap bitmap, String name) {
+    public NavItem(Bitmap bitmap, String name) {
         this.bitmap = bitmap;
         this.name = name;
     }
 
-    public JuiceNavItem(String name) {
+    public NavItem(String name) {
         this.name = name;
     }
 

@@ -8,23 +8,18 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import net.androidengineer.kiosktemplate.R;
-import net.androidengineer.kiosktemplate.adapters.ArtesianAdapter;
-import net.androidengineer.kiosktemplate.adapters.PremiumAdapter;
-import net.androidengineer.kiosktemplate.objects.ArtesianBlend;
-import net.androidengineer.kiosktemplate.objects.PremiumJuice;
+import net.androidengineer.kiosktemplate.adapters.ProductAdapter;
+import net.androidengineer.kiosktemplate.objects.ProductItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class ItemFragment extends ListFragment {
     public static RelativeLayout relativeLayout;
-    String mJuiceType;
-    ArtesianAdapter artesianAdapter;
-    PremiumAdapter premiumAdapter;
+    String section;
+    ProductAdapter productAdapter;
     OnFragmentInteractionListener mListener;
-    private List<ArtesianBlend> mArtesianItemList;
-    private ArrayList<PremiumJuice> mPremiumItemList;
+    private ArrayList<ProductItem> productItemArrayList;
 
     public ItemFragment() {
         // Required empty public constructor
@@ -51,20 +46,12 @@ public class ItemFragment extends ListFragment {
         mListener = null;
     }
 
-    public void setupArtesianList(String artesian, List<ArtesianBlend> artesianBlends) {
+    public void setupProductList(String section, ArrayList<ProductItem> productItems) {
         relativeLayout.setVisibility(View.VISIBLE);
-        mJuiceType = artesian;
-        mArtesianItemList = artesianBlends;
-        artesianAdapter = new ArtesianAdapter(getActivity(), mArtesianItemList);
-        setListAdapter(artesianAdapter);
-    }
-
-    public void setupPremiumList(String premium, ArrayList<PremiumJuice> premiumJuices) {
-        relativeLayout.setVisibility(View.VISIBLE);
-        mJuiceType = premium;
-        mPremiumItemList = premiumJuices;
-        premiumAdapter = new PremiumAdapter(getActivity(), mPremiumItemList);
-        setListAdapter(premiumAdapter);
+        this.section = section;
+        productItemArrayList = productItems;
+        productAdapter = new ProductAdapter(getActivity(), productItemArrayList);
+        setListAdapter(productAdapter);
     }
 
     public interface OnFragmentInteractionListener {
