@@ -32,10 +32,11 @@ import java.util.List;
 /**
  * Created by James Campbell. All rights reserved.
  */
-
+//TODO: File IO Conditionals
+//TODO: ViewFlipper Animations
 //TODO: Custom Nav List Icons
 //TODO: Template Logo
-//TODO: Information Content Refinement
+//TODO: Documentation
 //TODO: Section Images
 
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,

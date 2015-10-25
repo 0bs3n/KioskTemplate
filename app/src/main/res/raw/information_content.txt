@@ -1,2 +1,5 @@
-﻿This text will change once it reads from the information_content.txt file found in your Documents folder. It will make the change after 60 seconds of inactivity.
+﻿This text will change once it reads from the information_content.txt file located in your Documents folder.
+It will read your customized text after 60 seconds of inactivity or after restarting this app.
+Please see the readme.txt file located in your Documents folder for instructions and documentation.
+Thank you and Enjoy your Kiosk!
 
