@@ -32,6 +32,12 @@ import java.util.List;
 /**
  * Created by James Campbell. All rights reserved.
  */
+
+//TODO: Custom Nav List Icons
+//TODO: Template Logo
+//TODO: Information Content Refinement
+//TODO: Section Images
+
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         TopperFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener {
 
@@ -63,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     public void onBackPressed() {
         // nothing to do here
         // … kiosk mode app
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startLockTask();
+        }
     }
 
     @Override

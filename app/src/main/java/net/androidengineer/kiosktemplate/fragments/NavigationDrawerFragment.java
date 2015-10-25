@@ -131,7 +131,7 @@ public class NavigationDrawerFragment extends Fragment {
         ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
         ArrayList<String> arrayListImageNames = getBitmapList();
         for (int i = 0; i < arrayListImageNames.size(); i++) {
-            Bitmap mBitmap = getBitmap(arrayListImageNames.get(i));
+            Bitmap mBitmap = getSampledBitmap(arrayListImageNames.get(i));
             ImageView imageView = new ImageView(getActivity());
             imageView.setImageBitmap(mBitmap);
             mViewFlipper.addView(imageView);
@@ -315,7 +315,7 @@ public class NavigationDrawerFragment extends Fragment {
         try {
             OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     + getString(R.string.images_directory_path) + "about_your_company.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
             bitmap = null;
@@ -327,7 +327,7 @@ public class NavigationDrawerFragment extends Fragment {
         try {
             OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     + getString(R.string.images_directory_path) + "your_ad_here.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
             bitmap = null;
@@ -339,7 +339,7 @@ public class NavigationDrawerFragment extends Fragment {
         try {
             OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     + getString(R.string.images_directory_path) + "your_gallery_here.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
             bitmap = null;
@@ -351,7 +351,7 @@ public class NavigationDrawerFragment extends Fragment {
         try {
             OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     + getString(R.string.images_directory_path) + "your_products.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
             bitmap = null;
@@ -363,7 +363,7 @@ public class NavigationDrawerFragment extends Fragment {
         try {
             OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     + getString(R.string.images_directory_path) + "your_services.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
             bitmap = null;
@@ -458,18 +458,16 @@ public class NavigationDrawerFragment extends Fragment {
         category1TextView.setText(navHeaders.get(0).getCategory());
     }
 
-    private Bitmap getBitmap(String filename) {
+    private Bitmap getSampledBitmap(String filename) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+        options.inSampleSize = 2;
 
         Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                 + getString(R.string.images_directory_path) + filename, options);
-        Bitmap scaledBitmap = bitmap.copy(Bitmap.Config.RGB_565, true);
-
         System.gc();
         Runtime.getRuntime().gc();
 
-        return scaledBitmap;
+        return bitmap;
     }
 
     private ArrayList<String> getBitmapList() {
