@@ -74,11 +74,6 @@ public class NavAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void refreshDeviceList(List<NavItem> list) {
-        this.navItems = list;
-        notifyDataSetChanged();
-    }
-
     private class ViewItem {
         ImageView jImage;
         TextView jName;

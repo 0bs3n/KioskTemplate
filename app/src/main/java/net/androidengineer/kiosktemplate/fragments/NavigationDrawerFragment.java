@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import net.androidengineer.kiosktemplate.R;
@@ -151,7 +152,7 @@ public class NavigationDrawerFragment extends Fragment {
             InputStream is = this.getResources().openRawResource(resourceId);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            String readLine = null;
+            String readLine;
             // While the BufferedReader readLine is not null
             while ((readLine = br.readLine()) != null) {
                 contents.append(readLine);
@@ -208,20 +209,27 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void setExternalFolders() {
-        File mainfolder = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            String TAG = "KioskMenu";
-            mainfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), TAG);
-            if (!mainfolder.exists()) {
-                mainfolder.mkdirs();
+        File mainfolder;
+        String TAG = "KioskMenu";
+        mainfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), TAG);
+        if (!mainfolder.exists()) {
+            boolean mkdirs = mainfolder.mkdirs();
+            if (!mkdirs) {
+                Toast.makeText(getActivity(), "SD Card Error", Toast.LENGTH_SHORT).show();
             }
-            File imagesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Images");
-            if (!imagesfolder.exists()) {
-                imagesfolder.mkdirs();
+        }
+        File imagesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Images");
+        if (!imagesfolder.exists()) {
+            boolean mkdirs = imagesfolder.mkdirs();
+            if (!mkdirs) {
+                Toast.makeText(getActivity(), "SD Card Error", Toast.LENGTH_SHORT).show();
             }
-            File filesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Files");
-            if (!filesfolder.exists()) {
-                filesfolder.mkdirs();
+        }
+        File filesfolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/" + TAG, "Files");
+        if (!filesfolder.exists()) {
+            boolean mkdirs = filesfolder.mkdirs();
+            if (!mkdirs) {
+                Toast.makeText(getActivity(), "SD Card Error", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -234,12 +242,16 @@ public class NavigationDrawerFragment extends Fragment {
         ArrayList<String> dataList = csvFile.readSimpleList();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path));
-            for (int i = 0; i < dataList.size(); i++) {
-                writer.append(dataList.get(i) + "\n");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path));
+            if (!file.exists()) {
+                FileWriter writer = new FileWriter(file);
+                for (int i = 0; i < dataList.size(); i++) {
+                    String mString = dataList.get(i) + "\n";
+                    writer.append(mString);
+                }
+                writer.flush();
+                writer.close();
             }
-            writer.flush();
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -249,12 +261,16 @@ public class NavigationDrawerFragment extends Fragment {
         dataList = csvFile.readSimpleList();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.premium_brands_file));
-            for (int i = 0; i < dataList.size(); i++) {
-                writer.append(dataList.get(i) + "\n");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.nav_sections_file));
+            if (!file.exists()) {
+                FileWriter writer = new FileWriter(file);
+                for (int i = 0; i < dataList.size(); i++) {
+                    String mString = dataList.get(i) + "\n";
+                    writer.append(mString);
+                }
+                writer.flush();
+                writer.close();
             }
-            writer.flush();
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -265,19 +281,23 @@ public class NavigationDrawerFragment extends Fragment {
         productItemArrayList = csvFile.readProductArray();
         // save csv file on SDCard
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.products_file));
-            for (int i = 0; i < productItemArrayList.size(); i++) {
-                writer.append(productItemArrayList.get(i).getImageFilePath() + ","
-                                + productItemArrayList.get(i).getName() + ","
-                                + productItemArrayList.get(i).getPrice() + ","
-                                + productItemArrayList.get(i).getSKU() + ","
-                                + productItemArrayList.get(i).getDescription() + ","
-                                + productItemArrayList.get(i).getCategory() + "\n"
-                );
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.products_file));
+            if (!file.exists()) {
+                FileWriter writer = new FileWriter(file);
+                for (int i = 0; i < productItemArrayList.size(); i++) {
+                    String line = productItemArrayList.get(i).getImageFilePath() + ","
+                            + productItemArrayList.get(i).getName() + ","
+                            + productItemArrayList.get(i).getPrice() + ","
+                            + productItemArrayList.get(i).getSKU() + ","
+                            + productItemArrayList.get(i).getDescription() + ","
+                            + productItemArrayList.get(i).getCategory() + "\n";
+                    writer.append(line);
+                }
+                writer.flush();
+                writer.close();
+                productItemArrayList.clear();
             }
-            writer.flush();
-            writer.close();
-            productItemArrayList.clear();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -286,12 +306,16 @@ public class NavigationDrawerFragment extends Fragment {
         csvFile = new CSVFile(inputStream);
         dataList = csvFile.readSimpleList();
         try {
-            FileWriter writer = new FileWriter(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.drawer_categories_file));
-            for (int i = 0; i < dataList.size(); i++) {
-                writer.append(dataList.get(i) + "\n");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.drawer_categories_file));
+            if (!file.exists()) {
+                FileWriter writer = new FileWriter(file);
+                for (int i = 0; i < dataList.size(); i++) {
+                    String line = dataList.get(i) + "\n";
+                    writer.append(line);
+                }
+                writer.flush();
+                writer.close();
             }
-            writer.flush();
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -300,10 +324,13 @@ public class NavigationDrawerFragment extends Fragment {
         String path;
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.information_file);
         try {
-            FileWriter writer = new FileWriter(path);
-            writer.append(informationContent);
-            writer.flush();
-            writer.close();
+            File file = new File(path);
+            if (!file.exists()) {
+                FileWriter writer = new FileWriter(path);
+                writer.append(informationContent);
+                writer.flush();
+                writer.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -318,7 +345,6 @@ public class NavigationDrawerFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
-            bitmap = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -330,7 +356,6 @@ public class NavigationDrawerFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
-            bitmap = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -342,7 +367,6 @@ public class NavigationDrawerFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
-            bitmap = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -354,7 +378,6 @@ public class NavigationDrawerFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
-            bitmap = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -366,45 +389,52 @@ public class NavigationDrawerFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
-            bitmap = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
         try {
-            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     + getString(R.string.images_directory_path) + "logo.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
-            outputStream.flush();
-            outputStream.close();
-            bitmap = null;
+            if (!file.exists()) {
+                OutputStream outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo_thumbnail);
         try {
-            OutputStream outputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     + getString(R.string.images_directory_path) + "logo_thumbnail.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
-            outputStream.flush();
-            outputStream.close();
-            bitmap = null;
+            if (!file.exists()) {
+                OutputStream outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //endregion
+
+        System.gc();
+        Runtime.getRuntime().gc();
     }
 
     private void setupNavSections() {
         navItemArrayList.clear();
-        String csvFile = null;
+        String csvFile;
         csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                + getString(R.string.premium_brands_file);
+                + getString(R.string.nav_sections_file);
         BufferedReader br = null;
-        String line = "";
+        String line;
         String cvsSplitBy = ",";
         try {
             br = new BufferedReader(new FileReader(csvFile));
@@ -431,10 +461,10 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void setDrawerCategories(View view) {
-        String csvFile = null;
+        String csvFile;
         csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.drawer_categories_file);
         BufferedReader bufferedReader = null;
-        String line = "";
+        String line;
         String csvSplitBy = ",";
         ArrayList<NavHeader> navHeaders = new ArrayList<>();
         try {
@@ -474,7 +504,7 @@ public class NavigationDrawerFragment extends Fragment {
         ArrayList<String> arrayListBitmap = new ArrayList<>();
         String csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path);
         BufferedReader br = null;
-        String line = "";
+        String line;
         try {
             br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {

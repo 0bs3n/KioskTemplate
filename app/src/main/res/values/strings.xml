@@ -8,7 +8,7 @@
     <string name="content_main_logo">Main Logo</string>
 
     <!-- Files -->
-    <string name="premium_brands_file">"/KioskMenu/Files/nav_sections.csv"</string>
+    <string name="nav_sections_file">"/KioskMenu/Files/nav_sections.csv"</string>
     <string name="products_file">"/KioskMenu/Files/products.csv"</string>
     <string name="bitmap_list_path">"/KioskMenu/Files/nav_header_images.csv"</string>
     <string name="information_file">"/KioskMenu/Files/information_content.txt"</string>

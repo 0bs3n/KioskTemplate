@@ -16,7 +16,7 @@ public class CSVFile {
     }
 
     public ArrayList<String> readSimpleList() {
-        ArrayList<String> resultList = new ArrayList();
+        ArrayList<String> resultList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
             String csvLine;

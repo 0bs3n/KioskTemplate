@@ -2,11 +2,9 @@ package net.androidengineer.kiosktemplate.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +66,7 @@ public class TopperFragment extends Fragment {
             InputStream is = this.getResources().openRawResource(resourceId);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-            String readLine = null;
+            String readLine;
             // While the BufferedReader readLine is not null
             while ((readLine = br.readLine()) != null) {
                 contents.append(readLine);
@@ -111,32 +109,24 @@ public class TopperFragment extends Fragment {
     public void setRefreshedText() {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                 + getString(R.string.information_file);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            textViewTopper.setText(readTextFile(path));
-        }
+        textViewTopper.setText(readTextFile(path));
     }
 
     public String readTextFile(String actualFile) {
-
         String contents = String.valueOf("");
-
         try {
             // Get the text file
             File file = new File(actualFile);
             // read the file to get contents
-            Log.v("**KIOSK**", file.getPath());
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
-
             while ((line = br.readLine()) != null) {
                 // store the text file line to contents variable
                 contents += (line + "\n");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return contents;
     }
 

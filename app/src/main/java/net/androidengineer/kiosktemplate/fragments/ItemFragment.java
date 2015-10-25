@@ -19,7 +19,6 @@ public class ItemFragment extends ListFragment {
     String section;
     ProductAdapter productAdapter;
     OnFragmentInteractionListener mListener;
-    private ArrayList<ProductItem> productItemArrayList;
 
     public ItemFragment() {
         // Required empty public constructor
@@ -49,7 +48,7 @@ public class ItemFragment extends ListFragment {
     public void setupProductList(String section, ArrayList<ProductItem> productItems) {
         relativeLayout.setVisibility(View.VISIBLE);
         this.section = section;
-        productItemArrayList = productItems;
+        ArrayList<ProductItem> productItemArrayList = productItems;
         productAdapter = new ProductAdapter(getActivity(), productItemArrayList);
         setListAdapter(productAdapter);
     }

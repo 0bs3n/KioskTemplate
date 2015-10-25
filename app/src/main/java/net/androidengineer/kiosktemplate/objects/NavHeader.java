@@ -1,8 +1,5 @@
 package net.androidengineer.kiosktemplate.objects;
 
-/**
- * Created by engin on 10/22/2015.
- */
 public class NavHeader {
 
     String category;

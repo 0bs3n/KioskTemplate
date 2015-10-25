@@ -92,11 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (blockedKeys.contains(event.getKeyCode())) {
-            return true;
-        } else {
-            return super.dispatchKeyEvent(event);
-        }
+        return blockedKeys.contains(event.getKeyCode()) || super.dispatchKeyEvent(event);
     }
 
     @Override
@@ -105,10 +101,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         TopperFragment.textViewTopper.clearAnimation();
         if (juiceType.equals("Artesian")) {
             setItemFragment(juiceType, juiceBrand);
-        } else if (juiceType.equals("Premium")) {
+        }
+        if (juiceType.equals("Premium")) {
             setItemFragment(juiceType, juiceBrand);
-        } else {
-            //Nothing To See Here. Move Along.
         }
     }
 
@@ -193,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     private void setupProductListView(String brand) {
         productItemArrayList.clear();
-        String csvFile = null;
+        String csvFile;
         csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                 + getString(R.string.products_file);
         BufferedReader br = null;
