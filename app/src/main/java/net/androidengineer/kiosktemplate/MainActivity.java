@@ -32,8 +32,7 @@ import java.util.List;
 /**
  * Created by James Campbell. All rights reserved.
  */
-//TODO: File IO Conditionals
-//TODO: ViewFlipper Animations
+
 //TODO: Custom Nav List Icons
 //TODO: Template Logo
 //TODO: Documentation

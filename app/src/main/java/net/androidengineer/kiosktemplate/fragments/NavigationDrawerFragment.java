@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -50,7 +51,6 @@ public class NavigationDrawerFragment extends Fragment {
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     public static DrawerLayout mDrawerLayout;
-
     NavigationDrawerCallbacks mCallbacks;
     View mFragmentContainerView;
     int mCurrentSelectedPosition = 0;
@@ -60,8 +60,10 @@ public class NavigationDrawerFragment extends Fragment {
     List<NavItem> navItemArrayList = new ArrayList<>();
     String _mNavFragType;
     String _mNavFragBrand;
+    private ViewFlipper mViewFlipper;
     private ArrayList<ProductItem> productItemArrayList = new ArrayList<>();
     private ActionBarDrawerToggle mDrawerToggle;
+    private float initialX;
 
     public NavigationDrawerFragment() {
     }
@@ -129,7 +131,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void setViewFlipper(View v) {
-        ViewFlipper mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
+        mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
         ArrayList<String> arrayListImageNames = getBitmapList();
         for (int i = 0; i < arrayListImageNames.size(); i++) {
             Bitmap mBitmap = getSampledBitmap(arrayListImageNames.get(i));
@@ -139,6 +141,34 @@ public class NavigationDrawerFragment extends Fragment {
         }
         System.gc();
         Runtime.getRuntime().gc();
+
+        mViewFlipper.setInAnimation(getActivity(), R.anim.slide_in_left);
+        mViewFlipper.setOutAnimation(getActivity(), R.anim.slide_out_right);
+
+
+        mViewFlipper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent touchEvent) {
+                switch (touchEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initialX = touchEvent.getX();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        float finalX = touchEvent.getX();
+                        if (initialX > finalX) {
+                            if (mViewFlipper.getDisplayedChild() == 1)
+                                break;
+                            mViewFlipper.showNext();
+                        } else {
+                            if (mViewFlipper.getDisplayedChild() == 0)
+                                break;
+                            mViewFlipper.showPrevious();
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
 
         mViewFlipper.setAutoStart(true);
         mViewFlipper.setFlipInterval(3500);

@@ -103,7 +103,15 @@ public class TopperFragment extends Fragment {
     }
 
     public void setInitialText() {
-        textViewTopper.setText(loadText(R.raw.information_content));
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                + getString(R.string.information_file);
+        File file = new File(path);
+        if (!file.exists()) {
+            textViewTopper.setText(loadText(R.raw.information_content));
+        } else {
+            textViewTopper.setText(readTextFile(path));
+        }
+
     }
 
     public void setRefreshedText() {
