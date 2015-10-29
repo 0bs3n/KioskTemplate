@@ -34,7 +34,6 @@ import java.util.List;
  */
 
 //TODO: Custom Nav List Icons
-//TODO: Template Logo
 //TODO: Documentation
 //TODO: Section Images
 
@@ -223,8 +222,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         mTopperFragment.setText(juiceBrand);
         Bitmap bitmap = BitmapFactory.decodeFile(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                        + getString(R.string.images_directory_path) + juiceBrand.toLowerCase().replaceAll(" ", "") + ".bmp"
-        );
+                        + getString(R.string.images_directory_path)
+                        + juiceBrand.toLowerCase().replaceAll(" ", ""));
         mTopperFragment.setImageViewTopper(bitmap);
         //Pass to List Fragment
         setupProductListView(juiceBrand);

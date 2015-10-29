@@ -132,7 +132,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void setViewFlipper(View v) {
         mViewFlipper = (ViewFlipper) v.findViewById(R.id.nav_header_flipper);
-        ArrayList<String> arrayListImageNames = getBitmapList();
+        ArrayList<String> arrayListImageNames = getViewFlipperList();
         for (int i = 0; i < arrayListImageNames.size(); i++) {
             Bitmap mBitmap = getSampledBitmap(arrayListImageNames.get(i));
             ImageView imageView = new ImageView(getActivity());
@@ -530,7 +530,7 @@ public class NavigationDrawerFragment extends Fragment {
         return bitmap;
     }
 
-    private ArrayList<String> getBitmapList() {
+    private ArrayList<String> getViewFlipperList() {
         ArrayList<String> arrayListBitmap = new ArrayList<>();
         String csvFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.bitmap_list_path);
         BufferedReader br = null;
